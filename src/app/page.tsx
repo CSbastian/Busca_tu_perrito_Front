@@ -2,7 +2,7 @@ import ActionCard from "@/components/ActionCard";
 
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-8 bg-slate-50 p-6 text-slate-900">
+    <main className="flex flex-1 flex-col items-center justify-center gap-8 p-6">
       <header className="text-center">
         <h1 className="text-3xl font-bold">Busca tu perrito</h1>
         <p className="mt-3 text-slate-600">¿Cómo podemos ayudarte?</p>
