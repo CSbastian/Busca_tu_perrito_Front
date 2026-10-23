@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { searchByImage } from "@/services/search.service";
 import type { SearchMatch } from "@/services/search.service";
+import Icon from "@/components/Icon";
 
 const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
 const maxFileSize = 5 * 1024 * 1024;
@@ -79,14 +80,14 @@ export default function SearchByImageForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} aria-busy={isSearching} className="mt-6 w-full text-left">
+    <form onSubmit={handleSubmit} aria-busy={isSearching} className="btp-form">
       <label htmlFor="search-image" className="block font-semibold">Foto de tu perrito</label>
-      <p id="image-help" className="mt-2 text-sm text-slate-600">Una imagen JPG, PNG o WebP. Máximo 5 MB.</p>
-      <div className="relative flex min-h-44 items-center justify-center rounded border border-dashed border-slate-400 bg-white p-6 text-center focus-within:outline-2 focus-within:outline-blue-600 mt-4">
+      <p id="image-help" className="mt-2 text-sm text-muted">Una imagen JPG, PNG o WebP. Máximo 5 MB.</p>
+      <div className="upload-area mt-4">
         <div aria-hidden="true" className="pointer-events-none flex flex-col items-center gap-2">
-
+          <Icon name="upload" className="mb-2 h-8 w-8 text-accent" />
           <span className="font-bold">{file ? "Cambiar foto" : "Seleccionar una foto"}</span>
-          <span className="text-sm text-slate-600">Una foto clara, sin filtros ni recortes excesivos.</span>
+          <span className="text-sm text-muted">Una foto clara, sin filtros ni recortes excesivos.</span>
         </div>
         <input
           ref={inputRef}
@@ -113,10 +114,10 @@ export default function SearchByImageForm() {
               clearImage();
               setError("No pudimos leer esta imagen. Selecciona otro archivo.");
             }}
-            className="h-56 w-full rounded bg-slate-100 object-contain"
+            className="h-56 w-full rounded-ui bg-soft object-contain"
           />
-          <figcaption className="mt-2 break-all text-sm text-slate-600">{file.name}</figcaption>
-          <button type="button" disabled={isSearching} onClick={() => { clearImage(); setError(null); inputRef.current?.focus(); }} className="inline-flex min-h-11 items-center rounded text-sm font-semibold text-blue-700 underline disabled:opacity-50 mt-1">
+          <figcaption className="mt-2 break-all text-sm text-muted">{file.name}</figcaption>
+          <button type="button" disabled={isSearching} onClick={() => { clearImage(); setError(null); inputRef.current?.focus(); }} className="text-action mt-1">
             Quitar imagen
           </button>
         </figure>
@@ -124,7 +125,7 @@ export default function SearchByImageForm() {
 
       {error ? <p id="search-error" role="alert" className="mt-4 text-sm text-red-700">{error}</p> : null}
 
-      <div className="mt-6 grid gap-6">
+      <div className="search-filters">
         <fieldset disabled={isSearching} aria-describedby="radius-help">
           <legend className="font-semibold">Radio de búsqueda</legend>
           <div className="mt-2 grid grid-cols-4 gap-2">
@@ -132,11 +133,11 @@ export default function SearchByImageForm() {
               <label key={radius} className={isSearching ? "cursor-not-allowed" : "cursor-pointer"}>
                 <input type="radio" name="radiusKm" value={radius} checked={radiusKm === radius}
                   onChange={() => { setRadiusKm(radius); setMatches(null); }} className="peer sr-only" />
-                <span className="flex min-h-11 items-center justify-center rounded border border-slate-400 bg-white px-2 py-2 font-semibold text-slate-600 transition-colors duration-150 hover:border-blue-600 peer-checked:border-blue-600 peer-checked:bg-blue-700 peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-blue-600 peer-disabled:opacity-50">{radius} km</span>
+                <span className="flex min-h-11 items-center justify-center rounded-ui border border-input-border bg-surface px-2 py-2 font-semibold text-muted transition-colors duration-150 hover:border-accent peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-accent peer-disabled:opacity-50">{radius} km</span>
               </label>
             ))}
           </div>
-          <p id="radius-help" className="mt-2 text-sm text-slate-600">En esta demostración no se aplica una ubicación real.</p>
+          <p id="radius-help" className="mt-2 text-sm text-muted">En esta demostración no se aplica una ubicación real.</p>
         </fieldset>
         <div>
           <label htmlFor="search-breed" className="block font-semibold">Raza (opcional)</label>
@@ -146,7 +147,7 @@ export default function SearchByImageForm() {
             value={breed}
             onChange={(event) => { setBreed(event.target.value); setMatches(null); }}
             disabled={isSearching}
-            className="mt-2 w-full rounded border border-slate-400 bg-white px-3 py-3 text-base focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600 disabled:opacity-50"
+            className="mt-2 w-full rounded-ui border border-input-border bg-surface px-3 py-3 text-base focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
           >
             <option value="">Cualquier raza</option>
             {breedOptions.map((option) => <option key={option} value={option}>{option}</option>)}
@@ -154,11 +155,11 @@ export default function SearchByImageForm() {
         </div>
       </div>
 
-      <p className="mt-6 text-sm text-slate-600">Modo demostración: la búsqueda es simulada y tu imagen no se envía a ningún servidor.</p>
-      <button type="submit" disabled={!file || !isImageReady || isSearching} className="flex min-h-12 w-full items-center justify-center gap-2 rounded bg-blue-700 px-6 py-3 font-bold text-white hover:bg-blue-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-blue-600 disabled:opacity-50 mt-4">
-         {isSearching ? "Buscando…" : "Buscar"}
+      <p className="mt-6 text-sm text-muted">Modo demostración: la búsqueda es simulada y tu imagen no se envía a ningún servidor.</p>
+      <button type="submit" disabled={!file || !isImageReady || isSearching} className="button-primary mt-4">
+        <Icon name="search" /> {isSearching ? "Buscando…" : "Buscar"}
       </button>
-      <div role="status" aria-live="polite" className="mt-4 text-sm text-slate-600">
+      <div role="status" aria-live="polite" className="form-feedback">
         {isSearching ? "Procesando la búsqueda de demostración…" : null}
         {matches !== null ? (
           matches.length === 0
