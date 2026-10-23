@@ -5,7 +5,9 @@ Este repositorio contiene solo el frontend; la búsqueda y los reportes se
 conectarán a un backend externo mediante una API.
 
 Base: React, Next.js (App Router), TypeScript y Tailwind CSS.
-En esta etapa solo se incluye una pantalla inicial y la estructura de carpetas.
+Incluye inicio, búsqueda por imagen de demostración y una pantalla de reporte
+pendiente de implementar. La búsqueda es simulada: no sube imágenes ni consulta
+reportes reales.
 Los comandos usan Webpack por compatibilidad con el entorno Windows verificado.
 
 ## Ejecutar
