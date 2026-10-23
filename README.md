@@ -36,16 +36,14 @@ npm start
 public/                  Recursos estáticos
 src/
   app/                   Rutas, layout y estilos globales
-  features/
-    search/              Componentes y hooks de búsqueda; futura API y tipos
-    reports/             Componentes y hooks de reportes; futura API y tipos
-  components/
-    ui/                  Elementos visuales compartidos
-    layout/              Estructura visual compartida
-  lib/                   Futuro cliente HTTP y configuración de entorno
-  mocks/                 Futuros datos simulados
+    page.tsx             Inicio (/)
+    buscar/page.tsx      Búsqueda y resultados (/buscar)
+    reportar/page.tsx    Pantalla de reporte (/reportar)
+  components/            Componentes de interfaz
+  services/
+    search.service.ts    Búsqueda simulada; futura integración con la API
 ```
 
-Las carpetas vacías se conservan con `.gitkeep`. Las rutas de búsqueda,
-resultados y reportes están reservadas, pero aún no tienen pantallas.
-Los archivos de API, tipos y hooks se añadirán al implementar cada flujo.
+Las nuevas rutas y carpetas se crearán cuando sean necesarias. Las operaciones
+de búsqueda y reportes vivirán en `services/`. Al integrar el backend se podrá
+añadir un cliente HTTP compartido en `lib/`.
