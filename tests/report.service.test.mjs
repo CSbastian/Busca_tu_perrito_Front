@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { reportFoundDog, validateReport } from "../src/services/report.service.ts";
+import { reportFoundDog } from "../src/services/report.service.ts";
+import { validateReport } from "../src/validation/report.validation.ts";
 
 function validReport() {
   const data = new FormData();
