@@ -1,5 +1,82 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-canvas: #fffbf5;
+  --color-surface: #fff8ee;
+  --color-soft: #fff0da;
+  --color-soft-strong: #f4e0d0;
+  --color-line: #e8d5c0;
+  --color-input-border: #a17f5b;
+  --color-ink: #1c1208;
+  --color-muted: #7a5c44;
+  --color-accent: #b45309;
+  --color-accent-hover: #92400e;
+  --color-mark: #d97706;
+  --radius-ui: 7px;
+  --font-heading: var(--font-display), Georgia, serif;
+}
+
+:root {
+  --layout-width-reading: 670px;
+  --layout-width-report: 960px;
+  --layout-gap-inline: 8px;
+  --layout-gap-fields: 24px;
+  --layout-gap-sections: 32px;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), Arial, sans-serif;
+  line-height: 1.625;
+}
+
+::selection { background: #f4e0d0; color: #1c1208; }
+
+h1, h2 { font-family: var(--font-display), Georgia, serif; font-weight: 400; }
+button, input, textarea, select { accent-color: #b45309; caret-color: #b45309; }
+input::placeholder, textarea::placeholder { color: #7a5c44; opacity: 1; }
+button:not(:disabled), a, select:not(:disabled) { -webkit-tap-highlight-color: #f4e0d0; }
+html { scrollbar-color: #a17f5b #fffbf5; }
+
+.app-main { width: 100%; max-width: var(--layout-width-reading); margin-inline: auto; padding: 32px 24px 48px; }
+.page-heading { font-size: clamp(1.875rem, 5vw, 2.5rem); line-height: 1.2; text-wrap: balance; }
+.page-intro { margin-top: 12px; color: #7a5c44; text-wrap: pretty; }
+.btp-form { width: 100%; margin-top: 28px; text-align: left; }
+.upload-area { position: relative; display: flex; min-height: 176px; align-items: center; justify-content: center; border: 1px dashed #a17f5b; border-radius: 7px; background: #fff8ee; padding: 24px; text-align: center; transition: border-color 150ms, background-color 150ms; }
+.upload-area:hover { border-color: #b45309; background: #fff0da; }
+.upload-area:focus-within { outline: 2px solid #b45309; outline-offset: 4px; }
+.upload-area:has(input:disabled) { opacity: .6; }
+.back-link { display: inline-flex; min-height: 44px; align-items: center; gap: 8px; margin-top: 24px; color: #b45309; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; border-radius: 7px; }
+.back-link:focus-visible { outline: 2px solid #b45309; outline-offset: 4px; }
+.back-link:hover { color: #92400e; }
+.button-primary {
+  @apply flex min-h-12 w-full items-center justify-center gap-2 rounded-ui bg-accent px-6 py-3 font-bold text-white transition-colors duration-150 hover:bg-accent-hover active:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50;
+}
+.text-action {
+  @apply inline-flex min-h-11 items-center rounded-ui text-sm font-semibold text-accent underline underline-offset-4 transition-colors duration-150 hover:text-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50;
+}
+.form-feedback { margin-top: 16px; font-size: 14px; line-height: 1.625; color: #7a5c44; }
+.form-feedback:empty { display: none; }
+.how-steps { display: grid; gap: var(--layout-gap-fields); margin-top: var(--layout-gap-fields); }
+.how-steps li { display: grid; gap: var(--layout-gap-inline); min-width: 0; }
+.how-steps p { line-height: 1.625; color: #7a5c44; }
+.search-filters { display: grid; gap: var(--layout-gap-fields); margin-top: var(--layout-gap-fields); }
+.search-filters > *, .report-fields > *, .contact-fields > * { min-width: 0; }
+.report-fields { display: grid; gap: var(--layout-gap-sections); }
+.contact-fields { display: grid; gap: var(--layout-gap-fields); margin-top: 16px; }
+.report-contact legend { padding: 0; }
+
+@media (min-width: 640px) {
+  .app-main { padding-top: 40px; }
+  .how-steps li { grid-template-columns: minmax(0, 190px) minmax(0, 1fr); gap: var(--layout-gap-fields); align-items: baseline; }
+  .search-filters { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: start; }
+  .contact-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 960px) {
+  .app-main--report { max-width: var(--layout-width-report); }
+  .report-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .report-location, .report-contact { grid-column: 1 / -1; }
+  .report-description textarea { min-height: 208px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
