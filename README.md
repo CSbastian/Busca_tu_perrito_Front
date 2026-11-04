@@ -26,10 +26,14 @@ Para preparar la conexión futura, copiar `.env.example` a `.env.local` y
 completar `NEXT_PUBLIC_API_BASE_URL`. Esta variable es pública: no incluir secretos.
 
 ```sh
+yarn lint
+yarn format:check
 yarn typecheck
 yarn build
 yarn start
 ```
+
+Para aplicar el formato de Prettier al código y las pruebas, ejecuta `yarn format`.
 
 `yarn start` sirve la compilación de producción generada por `yarn build`.
 

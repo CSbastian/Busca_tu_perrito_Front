@@ -18,15 +18,26 @@ test("accepts a report without optional contact and completes the simulation", a
 });
 
 test("rejects missing, empty, oversized or unsupported photos", () => {
-  for (const file of [null, new File([], "empty.png", { type: "image/png" }), new File([new Uint8Array(5242881)], "large.png", { type: "image/png" }), new File(["text"], "note.txt", { type: "text/plain" })]) {
+  for (const file of [
+    null,
+    new File([], "empty.png", { type: "image/png" }),
+    new File([new Uint8Array(5242881)], "large.png", { type: "image/png" }),
+    new File(["text"], "note.txt", { type: "text/plain" }),
+  ]) {
     const data = validReport();
-    if (file) data.set("image", file); else data.delete("image");
+    if (file) data.set("image", file);
+    else data.delete("image");
     assert.ok(validateReport(data));
   }
 });
 
 test("rejects whitespace-only and oversized required fields", () => {
-  for (const [name, value] of [["location", "   "], ["description", "\n"], ["location", "x".repeat(201)], ["description", "x".repeat(1001)]]) {
+  for (const [name, value] of [
+    ["location", "   "],
+    ["description", "\n"],
+    ["location", "x".repeat(201)],
+    ["description", "x".repeat(1001)],
+  ]) {
     const data = validReport();
     data.set(name, value);
     assert.ok(validateReport(data));

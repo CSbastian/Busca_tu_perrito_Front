@@ -13,11 +13,16 @@ export type ReportResponse = {
 };
 
 export function createReport(data: FormData): Promise<ReportResponse> {
-  return requestJson<ReportResponse>(reportsPath, { method: "POST", body: data });
+  return requestJson<ReportResponse>(reportsPath, {
+    method: "POST",
+    body: data,
+  });
 }
 
 export function getReport(id: string): Promise<ReportResponse> {
-  return requestJson<ReportResponse>(`${reportsPath}/${encodeURIComponent(id)}`);
+  return requestJson<ReportResponse>(
+    `${reportsPath}/${encodeURIComponent(id)}`,
+  );
 }
 
 export function getReportImageUrl(id: string): string {

@@ -16,12 +16,9 @@ export function useSearchForm() {
   const [breed, setBreed] = useState("");
 
   useEffect(() => {
-    if (!file) return;
-
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
   function clearImage(resetInput = true) {
     setFile(null);
@@ -46,6 +43,7 @@ export function useSearchForm() {
     }
 
     setFile(selected);
+    setPreviewUrl(URL.createObjectURL(selected));
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -67,7 +65,6 @@ export function useSearchForm() {
       setIsSearching(false);
     }
   }
-
 
   function handleImageLoad() {
     setIsImageReady(true);

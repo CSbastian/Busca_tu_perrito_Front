@@ -1,4 +1,8 @@
-export const acceptedImageTypes: readonly string[] = ["image/jpeg", "image/png", "image/webp"];
+export const acceptedImageTypes: readonly string[] = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
 const maxImageSize = 5 * 1024 * 1024;
 
 export function validateImage(value: FormDataEntryValue | null): string | null {

@@ -20,14 +20,17 @@ export function useReportForm() {
   const uploadButtonRef = useRef<HTMLButtonElement>(null);
   const locationRequest = useRef(0);
 
-  useEffect(() => () => { locationRequest.current += 1; }, []);
+  useEffect(
+    () => () => {
+      locationRequest.current += 1;
+    },
+    [],
+  );
 
   useEffect(() => {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
   function openCamera() {
     cameraRef.current?.click();
@@ -52,6 +55,7 @@ export function useReportForm() {
       return;
     }
     setFile(selected);
+    setPreviewUrl(URL.createObjectURL(selected));
   }
 
   function detectLocation() {
@@ -60,7 +64,9 @@ export function useReportForm() {
     setLocationError(false);
     if (!window.isSecureContext || !navigator.geolocation) {
       setLocationError(true);
-      setLocationMessage("La ubicación no está disponible. Usa HTTPS o localhost, o escribe el lugar manualmente.");
+      setLocationMessage(
+        "La ubicación no está disponible. Usa HTTPS o localhost, o escribe el lugar manualmente.",
+      );
       return;
     }
 
@@ -70,18 +76,24 @@ export function useReportForm() {
     navigator.geolocation.getCurrentPosition(
       ({ coords }) => {
         if (request !== locationRequest.current) return;
-        setLocation(`${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`);
-        setLocationMessage(`Ubicación actual detectada (precisión aproximada: ${Math.round(coords.accuracy)} m). Puedes editarla si encontraste al perrito en otro lugar.`);
+        setLocation(
+          `${coords.latitude.toFixed(6)}, ${coords.longitude.toFixed(6)}`,
+        );
+        setLocationMessage(
+          `Ubicación actual detectada (precisión aproximada: ${Math.round(coords.accuracy)} m). Puedes editarla si encontraste al perrito en otro lugar.`,
+        );
         setIsLocating(false);
       },
       ({ code }) => {
         if (request !== locationRequest.current) return;
         setLocationError(true);
-        setLocationMessage(code === 1
-          ? "No se autorizó el acceso a la ubicación. Puedes habilitarlo en el navegador o escribir el lugar manualmente."
-          : code === 3
-            ? "La detección tardó demasiado. Reintenta o escribe el lugar manualmente."
-            : "No pudimos detectar tu ubicación. Reintenta o escribe el lugar manualmente.");
+        setLocationMessage(
+          code === 1
+            ? "No se autorizó el acceso a la ubicación. Puedes habilitarlo en el navegador o escribir el lugar manualmente."
+            : code === 3
+              ? "La detección tardó demasiado. Reintenta o escribe el lugar manualmente."
+              : "No pudimos detectar tu ubicación. Reintenta o escribe el lugar manualmente.",
+        );
         setIsLocating(false);
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 },
@@ -96,7 +108,9 @@ export function useReportForm() {
     if (file) data.set("image", file);
     const validationError = validateReport(data);
     if (validationError || !imageReady) {
-      setError(validationError ?? "No pudimos leer la foto. Selecciona otra imagen.");
+      setError(
+        validationError ?? "No pudimos leer la foto. Selecciona otra imagen.",
+      );
       return;
     }
 
@@ -106,12 +120,13 @@ export function useReportForm() {
       await reportFoundDog(data);
       setSubmitted(true);
     } catch {
-      setError("No pudimos procesar el reporte. Conservamos los datos para que puedas reintentar.");
+      setError(
+        "No pudimos procesar el reporte. Conservamos los datos para que puedas reintentar.",
+      );
     } finally {
       setIsSubmitting(false);
     }
   }
-
 
   function handleFormChange() {
     setSubmitted(false);
@@ -130,6 +145,7 @@ export function useReportForm() {
   function handleImageError() {
     setImageReady(false);
     setFile(null);
+    setPreviewUrl(null);
     setError("No pudimos leer la foto. Selecciona otra imagen.");
   }
 

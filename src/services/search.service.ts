@@ -9,7 +9,10 @@ export type SearchFilters = {
 };
 
 // Local simulation only
-export async function searchByImage(file: File, filters: SearchFilters): Promise<SearchMatch[]> {
+export async function searchByImage(
+  file: File,
+  filters: SearchFilters,
+): Promise<SearchMatch[]> {
   if (file.size === 0) {
     throw new Error("La imagen está vacía. Selecciona otro archivo.");
   }
