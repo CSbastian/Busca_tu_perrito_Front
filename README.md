@@ -12,11 +12,12 @@ Los comandos usan Webpack por compatibilidad con el entorno Windows verificado.
 
 ## Ejecutar
 
-Requisito: Node.js 22 LTS y npm.
+Requisitos: Node.js 22 LTS y Corepack. El proyecto fija Yarn 1.22.22.
 
 ```sh
-npm ci
-npm run dev
+corepack enable
+yarn install --frozen-lockfile
+yarn dev
 ```
 
 Abrir http://localhost:3000. La pantalla inicial funciona sin backend.
@@ -25,12 +26,12 @@ Para preparar la conexión futura, copiar `.env.example` a `.env.local` y
 completar `NEXT_PUBLIC_API_BASE_URL`. Esta variable es pública: no incluir secretos.
 
 ```sh
-npm run typecheck
-npm run build
-npm start
+yarn typecheck
+yarn build
+yarn start
 ```
 
-`npm start` ejecuta la compilación de producción después de `npm run build`.
+`yarn start` sirve la compilación de producción generada por `yarn build`.
 
 ## Estructura
 
