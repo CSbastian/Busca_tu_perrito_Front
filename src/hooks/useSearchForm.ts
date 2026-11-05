@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { searchByImage } from "@/services/search.service";
-import type { SearchMatch } from "@/services/search.service";
+import { searchReportsByImage } from "@/services/searches.api";
+import type { ReportSearchMatch } from "@/services/searches.api";
+import { describeApiError } from "@/services/api-errors";
 import { validateImage } from "@/validation/image.validation";
 
 export function useSearchForm() {
@@ -11,9 +12,8 @@ export function useSearchForm() {
   const [isImageReady, setIsImageReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
-  const [matches, setMatches] = useState<SearchMatch[] | null>(null);
-  const [radiusKm, setRadiusKm] = useState(5);
-  const [breed, setBreed] = useState("");
+  const [matches, setMatches] = useState<ReportSearchMatch[] | null>(null);
+  const searchInProgress = useRef(false);
 
   useEffect(() => {
     if (!previewUrl) return;
@@ -48,20 +48,27 @@ export function useSearchForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isSearching) return;
+    if (searchInProgress.current) return;
     if (!file || !isImageReady) {
       setError("Selecciona una imagen válida antes de buscar.");
       return;
     }
 
+    searchInProgress.current = true;
     setIsSearching(true);
     setError(null);
     setMatches(null);
     try {
-      setMatches(await searchByImage(file, { radiusKm, breed: breed || null }));
-    } catch {
-      setError("No pudimos realizar la búsqueda. Inténtalo de nuevo.");
+      setMatches(await searchReportsByImage(file));
+    } catch (error) {
+      setError(
+        describeApiError(
+          error,
+          "No pudimos realizar la búsqueda. Inténtalo de nuevo.",
+        ),
+      );
     } finally {
+      searchInProgress.current = false;
       setIsSearching(false);
     }
   }
@@ -81,16 +88,6 @@ export function useSearchForm() {
     inputRef.current?.focus();
   }
 
-  function handleRadiusChange(radius: number) {
-    setRadiusKm(radius);
-    setMatches(null);
-  }
-
-  function handleBreedChange(event: ChangeEvent<HTMLSelectElement>) {
-    setBreed(event.target.value);
-    setMatches(null);
-  }
-
   return {
     inputRef,
     fileName: file?.name ?? null,
@@ -99,14 +96,10 @@ export function useSearchForm() {
     error,
     isSearching,
     matches,
-    radiusKm,
-    breed,
     handleSubmit,
     handleFileChange,
     handleImageLoad,
     handleImageError,
     handleRemoveImage,
-    handleRadiusChange,
-    handleBreedChange,
   };
 }

@@ -31,26 +31,15 @@ export default function HomePage() {
           actionLabel="Reportar un perrito"
         />
       </nav>
-      <aside
-        aria-label="Estado de la aplicación"
-        className="mt-5 max-w-3xl text-sm leading-relaxed text-muted"
-      >
-        <strong className="font-semibold text-ink">
-          Estás en una demostración.
-        </strong>{" "}
-        Las búsquedas y los reportes son simulados. Tus fotos y datos no se
-        envían ni se guardan.
-      </aside>
       <section
         aria-labelledby="how-search-works"
         className="mt-10 border-t border-line pt-8 sm:mt-14 sm:pt-10"
       >
         <h2 id="how-search-works" className="text-2xl">
-          Así será la búsqueda
+          Así funciona la búsqueda
         </h2>
         <p className="mt-2 max-w-2xl leading-relaxed text-muted">
-          Estamos preparando una búsqueda con modelos de IA preentrenados para
-          comparar fotos con los reportes de la comunidad.
+          La búsqueda compara tu foto con los reportes de la comunidad.
         </p>
         <ol className="how-steps">
           <li>
@@ -60,11 +49,8 @@ export default function HomePage() {
             </p>
           </li>
           <li>
-            <h3 className="font-semibold">Después, reportes cercanos</h3>
-            <p>
-              La búsqueda comparará su foto con perros reportados dentro de un
-              radio cercano a tu ubicación.
-            </p>
+            <h3 className="font-semibold">Después, comparamos las fotos</h3>
+            <p>El sistema ordena los candidatos por similitud visual.</p>
           </li>
           <li>
             <h3 className="font-semibold">

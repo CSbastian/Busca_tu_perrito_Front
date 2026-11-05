@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Icon from "@/components/Icon";
 import { useSearchForm } from "@/hooks/useSearchForm";
 import { acceptedImageTypes } from "@/validation/image.validation";
@@ -23,15 +24,11 @@ export default function SearchByImageForm() {
     error,
     isSearching,
     matches,
-    radiusKm,
-    breed,
     handleSubmit,
     handleFileChange,
     handleImageLoad,
     handleImageError,
     handleRemoveImage,
-    handleRadiusChange,
-    handleBreedChange,
   } = useSearchForm();
 
   return (
@@ -99,60 +96,56 @@ export default function SearchByImageForm() {
         </p>
       ) : null}
 
-      <div className="search-filters">
-        <fieldset disabled={isSearching} aria-describedby="radius-help">
-          <legend className="font-semibold">Radio de búsqueda</legend>
-          <div className="mt-2 grid grid-cols-4 gap-2">
-            {radiusOptions.map((radius) => (
-              <label
-                key={radius}
-                className={
-                  isSearching ? "cursor-not-allowed" : "cursor-pointer"
-                }
-              >
-                <input
-                  type="radio"
-                  name="radiusKm"
-                  value={radius}
-                  checked={radiusKm === radius}
-                  onChange={() => handleRadiusChange(radius)}
-                  className="peer sr-only"
-                />
-                <span className="flex min-h-11 items-center justify-center rounded-ui border border-input-border bg-surface px-2 py-2 font-semibold text-muted transition-colors duration-150 hover:border-accent peer-checked:border-accent peer-checked:bg-accent peer-checked:text-white peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-accent peer-disabled:opacity-50">
-                  {radius} km
-                </span>
-              </label>
-            ))}
+      <fieldset
+        disabled
+        aria-describedby="search-filters-help"
+        className="mt-6"
+      >
+        <legend className="font-semibold">Filtros de búsqueda</legend>
+        <p id="search-filters-help" className="mt-2 text-sm text-muted">
+          Los filtros de radio y raza aún no están disponibles.
+        </p>
+        <div className="search-filters">
+          <fieldset>
+            <legend className="font-semibold">Radio de búsqueda</legend>
+            <div className="mt-2 grid grid-cols-4 gap-2">
+              {radiusOptions.map((radius) => (
+                <label key={radius} className="cursor-not-allowed">
+                  <input
+                    type="radio"
+                    name="radiusKm"
+                    value={radius}
+                    className="sr-only"
+                  />
+                  <span className="flex min-h-11 items-center justify-center rounded-ui border border-input-border bg-surface px-2 py-2 font-semibold text-muted opacity-50">
+                    {radius} km
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <div>
+            <label htmlFor="search-breed" className="block font-semibold">
+              Raza (opcional)
+            </label>
+            <select
+              id="search-breed"
+              name="breed"
+              className="mt-2 w-full cursor-not-allowed rounded-ui border border-input-border bg-surface px-3 py-3 text-base opacity-50"
+            >
+              <option value="">Cualquier raza</option>
+              {breedOptions.map((breed) => (
+                <option key={breed} value={breed}>
+                  {breed}
+                </option>
+              ))}
+            </select>
           </div>
-          <p id="radius-help" className="mt-2 text-sm text-muted">
-            En esta demostración no se aplica una ubicación real.
-          </p>
-        </fieldset>
-        <div>
-          <label htmlFor="search-breed" className="block font-semibold">
-            Raza (opcional)
-          </label>
-          <select
-            id="search-breed"
-            name="breed"
-            value={breed}
-            onChange={handleBreedChange}
-            disabled={isSearching}
-            className="mt-2 w-full rounded-ui border border-input-border bg-surface px-3 py-3 text-base focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
-          >
-            <option value="">Cualquier raza</option>
-            {breedOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
         </div>
-      </div>
+      </fieldset>
 
       <p className="mt-6 text-sm text-muted">
-        Modo demostración: la búsqueda es simulada y tu imagen no se envía a
-        ningún servidor.
+        La foto se envía para compararla con los reportes.
       </p>
       <button
         type="submit"
@@ -162,13 +155,37 @@ export default function SearchByImageForm() {
         <Icon name="search" /> {isSearching ? "Buscando…" : "Buscar"}
       </button>
       <div role="status" aria-live="polite" className="form-feedback">
-        {isSearching ? "Procesando la búsqueda de demostración…" : null}
-        {matches !== null
-          ? matches.length === 0
-            ? "Simulación completada: sin coincidencias de ejemplo. Esto no indica si tu perrito está reportado. Puedes probar con otra imagen."
-            : `Coincidencias de demostración: ${matches.length}.`
+        {isSearching ? "Comparando la foto con los reportes…" : null}
+        {matches?.length === 0
+          ? "No encontramos candidatos para esta búsqueda."
+          : null}
+        {matches && matches.length > 0
+          ? `Posibles coincidencias: ${matches.length}.`
           : null}
       </div>
+      {matches && matches.length > 0 ? (
+        <ol className="mt-4 grid gap-4" aria-label="Posibles coincidencias">
+          {matches.map((match) => (
+            <li key={match.id} className="rounded-ui border border-line p-4">
+              <img
+                src={match.imageUrl}
+                alt="Foto del perrito reportado"
+                className="h-40 w-full rounded-ui bg-soft object-contain"
+              />
+              <p className="mt-2 font-semibold">{match.location}</p>
+              <p className="text-sm text-muted">
+                Similitud visual: {match.similarity.toFixed(2)}
+              </p>
+              <Link
+                className="text-action"
+                href={`/reportes/${encodeURIComponent(match.id)}`}
+              >
+                Ver reporte
+              </Link>
+            </li>
+          ))}
+        </ol>
+      ) : null}
     </form>
   );
 }
