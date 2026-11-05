@@ -103,7 +103,7 @@ export default function ChileanPhoneInput({
 
   return (
     <>
-      <div className="mt-2 flex items-center rounded-ui border border-input-border bg-surface text-base focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-accent">
+      <div className="mt-2 flex items-center rounded-ui border border-input-border bg-surface text-base focus-within:outline-2 focus-within:outline-offset-4 focus-within:outline-accent">
         <span
           aria-hidden="true"
           className="shrink-0 border-r border-line px-3 font-semibold"
@@ -120,7 +120,7 @@ export default function ChileanPhoneInput({
           value={formatted}
           onChange={handleChange}
           onPaste={handlePaste}
-          className="min-h-11 min-w-0 flex-1 rounded-ui bg-transparent px-3 py-2 outline-none"
+          className="min-h-11 min-w-0 flex-1 rounded-ui bg-transparent px-3 py-3 outline-none"
         />
       </div>
       <p id={helpId} className="mt-2 text-sm text-muted">

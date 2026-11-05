@@ -55,7 +55,7 @@ export default function ReportDetail({ id }: { id: string }) {
 
   return (
     <article className="grid gap-6 min-[960px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-      <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-ui border border-line bg-soft">
+      <div className="relative grid aspect-[4/3] w-full place-items-center self-start overflow-hidden rounded-ui border border-line bg-surface">
         {imageUnavailable ? (
           <p
             role="status"

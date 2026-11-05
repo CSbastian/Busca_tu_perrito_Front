@@ -11,10 +11,7 @@ export default async function ReportPage({
 
   return (
     <main className="app-main app-main--report flex-1">
-      <Link
-        href="/buscar"
-        className="mb-6 inline-flex min-h-11 items-center gap-2 rounded-ui text-sm font-bold text-accent hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
-      >
+      <Link href="/buscar" className="back-link back-link--leading">
         <Icon name="back" className="h-4 w-4" />
         Volver a buscar
       </Link>

@@ -70,15 +70,17 @@ html {
   font-size: clamp(1.875rem, 5vw, 2.5rem);
   line-height: 1.2;
   text-wrap: balance;
+  overflow-wrap: anywhere;
 }
 .page-intro {
   margin-top: 12px;
+  max-width: 65ch;
   color: #7a5c44;
   text-wrap: pretty;
 }
 .btp-form {
   width: 100%;
-  margin-top: 28px;
+  margin-top: var(--layout-gap-sections);
   text-align: left;
 }
 .upload-area {
@@ -125,6 +127,10 @@ html {
 }
 .back-link:hover {
   color: #92400e;
+}
+.back-link--leading {
+  margin-top: 0;
+  margin-bottom: var(--layout-gap-fields);
 }
 .button-primary {
   @apply flex min-h-12 w-full items-center justify-center gap-2 rounded-ui bg-accent px-6 py-3 font-bold text-white transition-colors duration-150 hover:bg-accent-hover active:bg-accent-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-50;

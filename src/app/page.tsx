@@ -9,14 +9,11 @@ export default function HomePage() {
           <Icon name="paw" className="h-8 w-8" />
         </div>
         <h1 className="page-heading">Busca tu perrito</h1>
-        <p className="page-intro">
+        <p className="page-intro mx-auto">
           Busca con una foto o ayuda reportando un perrito encontrado.
         </p>
       </header>
-      <nav
-        aria-label="Acciones principales"
-        className="mt-6 grid gap-4 sm:mt-8"
-      >
+      <nav aria-label="Acciones principales" className="mt-8 grid gap-3">
         <ActionCard
           href="/buscar"
           title="Buscar mi perrito"

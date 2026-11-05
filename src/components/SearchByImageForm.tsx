@@ -166,22 +166,27 @@ export default function SearchByImageForm() {
       {matches && matches.length > 0 ? (
         <ol className="mt-4 grid gap-4" aria-label="Posibles coincidencias">
           {matches.map((match) => (
-            <li key={match.id} className="rounded-ui border border-line p-4">
+            <li
+              key={match.id}
+              className="grid items-center gap-4 rounded-ui border border-line p-4 sm:grid-cols-[9rem_minmax(0,1fr)]"
+            >
               <img
                 src={match.imageUrl}
                 alt="Foto del perrito reportado"
-                className="h-40 w-full rounded-ui bg-soft object-contain"
+                className="h-40 w-full rounded-ui bg-surface object-contain sm:h-28"
               />
-              <p className="mt-2 font-semibold">{match.location}</p>
-              <p className="text-sm text-muted">
-                Similitud visual: {match.similarity.toFixed(2)}
-              </p>
-              <Link
-                className="text-action"
-                href={`/reportes/${encodeURIComponent(match.id)}`}
-              >
-                Ver reporte
-              </Link>
+              <div className="min-w-0 [overflow-wrap:anywhere]">
+                <p className="font-semibold">{match.location}</p>
+                <p className="mt-1 text-sm text-muted">
+                  Similitud visual: {match.similarity.toFixed(2)}
+                </p>
+                <Link
+                  className="text-action"
+                  href={`/reportes/${encodeURIComponent(match.id)}`}
+                >
+                  Ver reporte
+                </Link>
+              </div>
             </li>
           ))}
         </ol>
