@@ -16,14 +16,20 @@ export function validateReport(data: FormData): string | null {
       return `${label} es obligatoria y admite hasta ${limit} caracteres.`;
     }
   }
-  for (const [name, limit] of [
-    ["contactName", 100],
-    ["contactPhone", 40],
-  ] as const) {
-    const value = data.get(name);
-    if (value !== null && (typeof value !== "string" || value.length > limit)) {
-      return "Revisa los datos de contacto.";
-    }
+  const contactName = data.get("contactName");
+  if (
+    contactName !== null &&
+    (typeof contactName !== "string" || contactName.length > 100)
+  ) {
+    return "Revisa los datos de contacto.";
+  }
+  const phone = data.get("contactPhone");
+  if (
+    phone !== null &&
+    (typeof phone !== "string" ||
+      (phone.trim() && !/^\+56 \d \d{4} \d{4}$/.test(phone)))
+  ) {
+    return "Completa los 9 dígitos del teléfono o deja el campo vacío.";
   }
   return null;
 }

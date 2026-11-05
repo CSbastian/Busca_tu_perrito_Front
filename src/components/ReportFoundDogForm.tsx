@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import ChileanPhoneInput from "@/components/ChileanPhoneInput";
 import Icon from "@/components/Icon";
 import { useReportForm } from "@/hooks/useReportForm";
 import { acceptedImageTypes } from "@/validation/image.validation";
@@ -202,14 +203,10 @@ export default function ReportFoundDogForm() {
               >
                 Teléfono
               </label>
-              <input
+              <ChileanPhoneInput
                 id="report-contact-phone"
                 name="contactPhone"
-                type="tel"
-                autoComplete="tel"
-                maxLength={40}
-                placeholder="+56 9 1234 5678"
-                className={fieldClassName}
+                onValueChange={handleFormChange}
               />
             </div>
           </div>

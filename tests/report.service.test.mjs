@@ -42,11 +42,31 @@ test("rejects whitespace-only and oversized required fields", () => {
   }
 });
 
-test("accepts optional contact and rejects oversized values", () => {
+test("accepts optional contact and rejects oversized names", () => {
   const data = validReport();
   data.set("contactName", "Persona de prueba");
   data.set("contactPhone", "+56 9 0000 0000");
   assert.equal(validateReport(data), null);
-  data.set("contactPhone", "1".repeat(41));
+  data.set("contactName", "x".repeat(101));
   assert.ok(validateReport(data));
+});
+
+test("accepts empty and complete Chilean phones and rejects partial phones", () => {
+  const data = validReport();
+  for (const phone of ["", "+56 9 1234 5678", "+56 2 1234 5678"]) {
+    data.set("contactPhone", phone);
+    assert.equal(validateReport(data), null);
+  }
+  for (const phone of [
+    "+56",
+    "+56 9 1234 567",
+    "+56 9 1234 56789",
+    "912345678",
+  ]) {
+    data.set("contactPhone", phone);
+    assert.equal(
+      validateReport(data),
+      "Completa los 9 dígitos del teléfono o deja el campo vacío.",
+    );
+  }
 });
