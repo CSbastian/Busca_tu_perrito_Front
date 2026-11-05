@@ -7,7 +7,8 @@ export default function ReportarPage() {
     <main className="app-main app-main--report flex-1">
       <h1 className="page-heading">Reportar un perrito encontrado</h1>
       <p className="page-intro">
-        Ayuda a que un perrito vuelva a casa. Completa los datos del lugar donde lo encontraste y una descripción.
+        Ayuda a que un perrito vuelva a casa. Completa los datos del lugar donde
+        lo encontraste y una descripción.
       </p>
       <ReportFoundDogForm />
       <Link href="/" className="back-link">

@@ -99,7 +99,7 @@ Títulos de página: escala fluida entre 30 y 40 px, interlineado 1.2. Títulos 
 
 Inicio y Buscar usan `.app-main`, con ancho máximo de lectura de 670 px incluyendo laterales de 24 px, centrado, espacio superior de 32 px en móvil y 40 px desde 640 px. Reportar conserva esa base hasta 959 px; desde 960 px usa `.app-main--report` con máximo de 960 px. La cabecera compartida tiene un máximo de 1024 px; marca y navegación se apilan en móvil y se distribuyen en fila desde 640 px.
 
-Inicio usa introducción centrada y acciones apiladas, búsqueda primero. La explicación queda después de ambas acciones y el aviso de demostración: tres pasos en filas, nunca tres columnas estrechas. Desde 640 px cada fila alinea un título de hasta 190 px con su explicación; en móvil el texto queda debajo del título.
+Inicio usa introducción centrada y acciones apiladas, búsqueda primero. La explicación queda después de ambas acciones, con tres pasos en filas. Desde 640 px cada fila alinea un título de hasta 190 px con su explicación; en móvil el texto queda debajo del título.
 
 Buscar mantiene la foto antes de los filtros; radio y raza comparten una fila desde 640 px y se apilan en móvil. Reportar mantiene el orden ubicación → foto → descripción → contacto → envío. Desde 960 px, foto y descripción comparten fila; ubicación y contacto abarcan todo el formulario. Nombre y teléfono comparten fila desde 640 px. No usar CSS `order` ni duplicar controles para reorganizar el contenido.
 
@@ -123,13 +123,13 @@ Paneles, formularios, botones, navegación y vistas previas usan `rounded-ui` de
 - **Fotos del reporte:** dos controles con iconos y texto, para cámara y archivo. Conservan sus funciones y limitaciones del navegador.
 - **Botones:** `.button-primary` unifica las acciones de Buscar y Reportar: mínimo 48 px, Nunito 700, ámbar profundo y blanco; hover más oscuro; deshabilitado con semántica nativa, opacidad 0.5 y cursor de indisponibilidad. `.text-action` ofrece acciones de quitar foto con área mínima de 44 px.
 - **Movimiento:** transiciones discretas de color de 150 ms en acciones, sin animaciones de entrada; `prefers-reduced-motion` reduce transiciones y animaciones.
-- **Feedback:** `.form-feedback` unifica el espaciado y oculta el espacio del estado cuando está vacío. Conservar estados de carga, errores y avisos accesibles existentes. Al quitar una foto del reporte, devolver el foco a «Subir archivo». No presentar búsquedas ni envíos simulados como operaciones reales.
+- **Feedback:** `.form-feedback` unifica el espaciado y oculta el espacio del estado cuando está vacío. Distinguir carga, búsqueda sin candidatos, error y publicación confirmada. Al quitar una foto del reporte, devolver el foco a «Subir archivo».
 
 ## Do's and Don'ts
 
 - **Do** reutilizar los tokens, fuentes locales y radio de 7 px en las tres pantallas.
 - **Do** mantener controles de al menos 44 px cuando corresponda, foco visible y campos editables de 16 px.
-- **Do** mantener prioridad de búsqueda, reporte accesible y avisos de demostración.
+- **Do** mantener la prioridad de búsqueda y el reporte accesible. Mostrar radio y raza deshabilitados mientras esos filtros no estén disponibles.
 - **Don't** mezclar la antigua familia azul/pizarra con la nueva dirección en estas pantallas.
 - **Don't** copiar estadísticas, porcentajes de IA, cobertura, promesas de privacidad o reencuentros sin evidencia del producto.
 - **Don't** añadir efectos, fotos decorativas o tarjetas anidadas para sustituir la jerarquía de los formularios.

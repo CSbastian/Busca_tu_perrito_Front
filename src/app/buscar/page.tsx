@@ -7,7 +7,8 @@ export default function BuscarPage() {
     <main className="app-main flex-1">
       <h1 className="page-heading">Buscar mi perrito</h1>
       <p className="page-intro">
-        Selecciona una foto clara de tu perrito para iniciar una búsqueda por imagen.
+        Selecciona una foto clara de tu perrito para iniciar una búsqueda por
+        imagen.
       </p>
       <SearchByImageForm />
       <Link href="/" className="back-link">
