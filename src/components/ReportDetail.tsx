@@ -20,7 +20,7 @@ export default function ReportDetail({ id }: { id: string }) {
         if (!controller.signal.aborted) {
           const fallback =
             error instanceof ApiError && error.status === 404
-              ? "El reporte no existe."
+              ? "No encontramos ese reporte."
               : "No pudimos cargar el reporte.";
           setError(describeApiError(error, fallback));
         }

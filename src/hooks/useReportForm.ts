@@ -140,7 +140,7 @@ export function useReportForm() {
       );
       setError(
         mayHaveSaved
-          ? `${message} El reporte pudo haberse guardado. Antes de volver a enviarlo, comprueba si aparece en la búsqueda.`
+          ? "El reporte pudo haberse guardado. Si lo vuelves a enviar, podría quedar duplicado."
           : message,
       );
     } finally {
