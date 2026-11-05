@@ -14,18 +14,14 @@ export class ApiError extends Error {
   }
 }
 
-export function getApiUrl(path: string): string {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL?.trim().replace(/\/+$/, "") ?? "";
-  return `${baseUrl}${path}`;
-}
-
 export async function requestJson<T>(
   path: string,
   options?: RequestInit,
+  expectedStatus = 200,
 ): Promise<T> {
-  const response = await fetch(getApiUrl(path), options);
-  if (!response.ok) {
+  const response = await fetch(path, { ...options, redirect: "error" });
+  const requestId = response.headers.get("X-Request-ID") ?? undefined;
+  if (response.status !== expectedStatus) {
     const body: ErrorResponse | null = await response.json().catch(() => null);
     const error = body?.error;
     throw new ApiError(
@@ -33,8 +29,15 @@ export async function requestJson<T>(
       error?.message ??
         `La API respondió con un error HTTP ${response.status}.`,
       error?.code,
-      error?.requestId,
+      error?.requestId ?? requestId,
     );
   }
-  return response.json();
+  return response.json().catch(() => {
+    throw new ApiError(
+      response.status,
+      "La API devolvió una respuesta inesperada.",
+      undefined,
+      requestId,
+    );
+  });
 }
