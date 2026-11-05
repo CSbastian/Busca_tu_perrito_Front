@@ -1,13 +1,11 @@
 # Busca tu perrito — Frontend
 
 Interfaz web para buscar perros por imagen y reportar perros encontrados.
-Este repositorio contiene solo el frontend; la búsqueda y los reportes se
-conectarán a un backend externo mediante una API.
+Next.js actúa como pasarela entre el navegador y la API de FastAPI.
 
 Base: React, Next.js (App Router), TypeScript y Tailwind CSS.
-Incluye inicio, búsqueda por imagen de demostración y una pantalla de reporte
-pendiente de implementar. La búsqueda es simulada: no sube imágenes ni consulta
-reportes reales.
+Incluye inicio, búsqueda por imagen, publicación de reportes y detalle de cada
+reporte.
 Los comandos usan Webpack por compatibilidad con el entorno Windows verificado.
 
 ## Ejecutar
@@ -22,8 +20,11 @@ yarn dev
 
 Abrir http://localhost:3000. La pantalla inicial funciona sin backend.
 
-Para preparar la conexión futura, copiar `.env.example` a `.env.local` y
-completar `NEXT_PUBLIC_API_BASE_URL`. Esta variable es pública: no incluir secretos.
+Para conectar la API, copiar `.env.example` a `.env.local` y configurar
+`API_BASE_URL` con el origen de FastAPI (localmente, `http://127.0.0.1:8000`).
+Reiniciar Next.js tras cambiar el archivo. La pasarela usa rutas del mismo origen
+que el frontend. Para publicar y buscar deben estar disponibles FastAPI,
+PostgreSQL y el servicio de IA.
 
 ```sh
 yarn lint
@@ -46,11 +47,10 @@ src/
     page.tsx             Inicio (/)
     buscar/page.tsx      Búsqueda y resultados (/buscar)
     reportar/page.tsx    Pantalla de reporte (/reportar)
+    reportes/[id]/       Detalle de un reporte
+    api/v1/              Pasarela hacia FastAPI
   components/            Componentes de interfaz
-  services/
-    search.service.ts    Búsqueda simulada; futura integración con la API
+  hooks/                 Estado y acciones de los formularios
+  services/              Cliente HTTP y operaciones de la API
+  validation/            Validación local de fotos y reportes
 ```
-
-Las nuevas rutas y carpetas se crearán cuando sean necesarias. Las operaciones
-de búsqueda y reportes vivirán en `services/`. Al integrar el backend se podrá
-añadir un cliente HTTP compartido en `lib/`.
