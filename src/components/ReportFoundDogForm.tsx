@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Icon from "@/components/Icon";
 import { useReportForm } from "@/hooks/useReportForm";
 import { acceptedImageTypes } from "@/validation/image.validation";
@@ -14,7 +15,7 @@ export default function ReportFoundDogForm() {
     imageReady,
     error,
     isSubmitting,
-    submitted,
+    reportId,
     location,
     isLocating,
     locationMessage,
@@ -39,13 +40,13 @@ export default function ReportFoundDogForm() {
       onSubmit={handleSubmit}
       onChange={handleFormChange}
       aria-busy={isSubmitting}
-      aria-describedby={`report-demo${error ? " report-error" : ""}`}
+      aria-describedby={`report-help${error ? " report-error" : ""}`}
       className="btp-form"
     >
-      <p id="report-demo" className="mb-6 max-w-prose text-sm text-muted">
-        La ubicación, la foto y la descripción son obligatorias. Modo
-        demostración: los datos y la foto no se envían ni se guardan. No se
-        publicará un reporte real.
+      <p id="report-help" className="mb-6 max-w-prose text-sm text-muted">
+        La ubicación, la foto y la descripción son obligatorias. Al publicar, la
+        foto y los datos del reporte quedan disponibles para quienes encuentren
+        el reporte.
       </p>
       <fieldset
         disabled={isSubmitting}
@@ -221,17 +222,26 @@ export default function ReportFoundDogForm() {
       ) : null}
       <button
         type="submit"
-        disabled={!imageReady || isSubmitting || isLocating}
+        disabled={
+          !imageReady || isSubmitting || isLocating || reportId !== null
+        }
         className="button-primary mt-6"
       >
-        {isSubmitting ? "Procesando…" : "Simular envío de reporte"}
+        {isSubmitting ? "Procesando…" : "Publicar reporte"}
       </button>
       <p role="status" className="form-feedback">
-        {isSubmitting
-          ? "Procesando el reporte de demostración…"
-          : submitted
-            ? "Simulación completada. No se ha guardado ni publicado ningún reporte."
-            : null}
+        {isSubmitting ? "Publicando el reporte…" : null}
+        {reportId !== null ? (
+          <>
+            Reporte publicado.{" "}
+            <Link
+              className="text-action"
+              href={`/reportes/${encodeURIComponent(reportId)}`}
+            >
+              Ver reporte
+            </Link>
+          </>
+        ) : null}
       </p>
     </form>
   );

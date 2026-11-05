@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { reportFoundDog } from "../src/services/report.service.ts";
 import { validateReport } from "../src/validation/report.validation.ts";
 
 function validReport() {
@@ -11,10 +10,9 @@ function validReport() {
   return data;
 }
 
-test("accepts a report without optional contact and completes the simulation", async () => {
+test("accepts a report without optional contact", () => {
   const data = validReport();
   assert.equal(validateReport(data), null);
-  await assert.doesNotReject(reportFoundDog(data));
 });
 
 test("rejects missing, empty, oversized or unsupported photos", () => {

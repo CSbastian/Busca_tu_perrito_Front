@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-import { reportFoundDog } from "@/services/report.service";
+import { createReport } from "@/services/reports.api";
+import { ApiError } from "@/services/api.client";
+import { describeApiError } from "@/services/api-errors";
 import { validateReport } from "@/validation/report.validation";
 import { validateImage } from "@/validation/image.validation";
 
@@ -10,7 +12,8 @@ export function useReportForm() {
   const [imageReady, setImageReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [reportId, setReportId] = useState<string | null>(null);
+  const submitInProgress = useRef(false);
   const [location, setLocation] = useState("");
   const [isLocating, setIsLocating] = useState(false);
   const [locationMessage, setLocationMessage] = useState("");
@@ -60,7 +63,7 @@ export function useReportForm() {
 
   function detectLocation() {
     if (isLocating || isSubmitting) return;
-    setSubmitted(false);
+    setReportId(null);
     setLocationError(false);
     if (!window.isSecureContext || !navigator.geolocation) {
       setLocationError(true);
@@ -102,8 +105,7 @@ export function useReportForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (isSubmitting || isLocating) return;
-    setSubmitted(false);
+    if (submitInProgress.current || isLocating || reportId !== null) return;
     const data = new FormData(event.currentTarget);
     if (file) data.set("image", file);
     const validationError = validateReport(data);
@@ -115,21 +117,40 @@ export function useReportForm() {
     }
 
     setError(null);
+    for (const field of ["contactName", "contactPhone"]) {
+      const value = data.get(field);
+      if (typeof value === "string" && !value.trim()) data.delete(field);
+    }
+
+    submitInProgress.current = true;
     setIsSubmitting(true);
     try {
-      await reportFoundDog(data);
-      setSubmitted(true);
-    } catch {
+      const report = await createReport(data);
+      setReportId(report.id);
+    } catch (error) {
+      const mayHaveSaved =
+        !(error instanceof ApiError) ||
+        error.status === 201 ||
+        error.status === 500 ||
+        error.code === "backend_unavailable" ||
+        (!error.code && error.status >= 500);
+      const message = describeApiError(
+        error,
+        "No pudimos confirmar el envío del reporte.",
+      );
       setError(
-        "No pudimos procesar el reporte. Conservamos los datos para que puedas reintentar.",
+        mayHaveSaved
+          ? `${message} El reporte pudo haberse guardado. Antes de volver a enviarlo, comprueba si aparece en la búsqueda.`
+          : message,
       );
     } finally {
+      submitInProgress.current = false;
       setIsSubmitting(false);
     }
   }
 
   function handleFormChange() {
-    setSubmitted(false);
+    setReportId(null);
   }
 
   function handleLocationChange(event: ChangeEvent<HTMLInputElement>) {
@@ -154,7 +175,7 @@ export function useReportForm() {
     setPreviewUrl(null);
     setImageReady(false);
     setError(null);
-    setSubmitted(false);
+    setReportId(null);
     uploadButtonRef.current?.focus();
   }
 
@@ -164,7 +185,7 @@ export function useReportForm() {
     imageReady,
     error,
     isSubmitting,
-    submitted,
+    reportId,
     location,
     isLocating,
     locationMessage,
