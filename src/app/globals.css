@@ -228,3 +228,11 @@ html {
     animation-duration: 0.01ms !important;
   }
 }
+
+.search-upload-area {
+  min-height: 240px;
+}
+.search-upload-area > div {
+  width: 100%;
+  min-width: 0;
+}

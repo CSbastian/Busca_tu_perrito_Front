@@ -1,21 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import Icon from "@/components/Icon";
 import { useSearchForm } from "@/hooks/useSearchForm";
 import { acceptedImageTypes } from "@/validation/image.validation";
 
-const radiusOptions = [2, 5, 10, 20];
-const breedOptions = [
-  "Golden Retriever",
-  "Labrador",
-  "Beagle",
-  "Poodle",
-  "Mestizo / Cruce",
-  "Otra",
-];
-
 export default function SearchByImageForm() {
+  const [showFilters, setShowFilters] = useState(false);
   const {
     inputRef,
     fileName,
@@ -37,21 +29,31 @@ export default function SearchByImageForm() {
       <label htmlFor="search-image" className="block font-semibold">
         Foto de tu perrito
       </label>
-      <p id="image-help" className="mt-2 text-sm text-muted">
-        Una imagen JPG, PNG o WebP. Máximo 5 MB.
-      </p>
-      <div className="upload-area mt-4">
+      <div className="upload-area search-upload-area mt-3">
         <div
           aria-hidden="true"
           className="pointer-events-none flex flex-col items-center gap-2"
         >
-          <Icon name="upload" className="mb-2 h-8 w-8 text-accent" />
-          <span className="font-bold">
-            {fileName !== null ? "Cambiar foto" : "Seleccionar una foto"}
+          {previewUrl ? (
+            <img
+              key={previewUrl}
+              src={previewUrl}
+              alt=""
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+              className="h-44 w-full rounded-ui object-contain"
+            />
+          ) : (
+            <Icon name="upload" className="mb-2 h-8 w-8 text-accent" />
+          )}
+          <span className="inline-flex min-h-11 items-center rounded-ui border border-line bg-surface px-4 py-2 font-bold text-accent">
+            {fileName !== null ? "Cambiar foto" : "Seleccionar foto"}
           </span>
-          <span className="text-sm text-muted">
-            Una foto clara, sin filtros ni recortes excesivos.
-          </span>
+          {fileName !== null ? (
+            <span className="max-w-full break-all text-sm text-muted">
+              {fileName}
+            </span>
+          ) : null}
         </div>
         <input
           ref={inputRef}
@@ -67,28 +69,18 @@ export default function SearchByImageForm() {
         />
       </div>
 
+      <p id="image-help" className="mt-2 text-sm text-muted">
+        JPG, PNG o WebP · Máx. 5 MB
+      </p>
       {fileName !== null && previewUrl ? (
-        <figure className="mt-6">
-          <img
-            key={previewUrl}
-            src={previewUrl}
-            alt="Vista previa de la foto seleccionada para buscar"
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-            className="h-56 w-full rounded-ui bg-soft object-contain"
-          />
-          <figcaption className="mt-2 break-all text-sm text-muted">
-            {fileName}
-          </figcaption>
-          <button
-            type="button"
-            disabled={isSearching}
-            onClick={handleRemoveImage}
-            className="text-action mt-1"
-          >
-            Quitar imagen
-          </button>
-        </figure>
+        <button
+          type="button"
+          disabled={isSearching}
+          onClick={handleRemoveImage}
+          className="text-action mt-1"
+        >
+          Quitar foto
+        </button>
       ) : null}
 
       {imageError ? (
@@ -101,56 +93,77 @@ export default function SearchByImageForm() {
         </p>
       ) : null}
 
-      <fieldset
-        disabled
-        aria-describedby="search-filters-help"
-        className="mt-6"
-      >
-        <legend className="font-semibold">Filtros de búsqueda</legend>
-        <p id="search-filters-help" className="mt-2 text-sm text-muted">
-          Los filtros de radio y raza aún no están disponibles.
-        </p>
-        <div className="search-filters">
-          <fieldset>
-            <legend className="font-semibold">Radio de búsqueda</legend>
-            <div className="mt-2 grid grid-cols-4 gap-2">
-              {radiusOptions.map((radius) => (
-                <label key={radius} className="cursor-not-allowed">
-                  <input
-                    type="radio"
-                    name="radiusKm"
-                    value={radius}
-                    className="sr-only"
-                  />
-                  <span className="flex min-h-11 items-center justify-center rounded-ui border border-input-border bg-surface px-2 py-2 font-semibold text-muted opacity-50">
+      <div className="mt-4">
+        <button
+          type="button"
+          aria-expanded={showFilters}
+          aria-controls="search-filters-preview"
+          onClick={() => setShowFilters((shown) => !shown)}
+          className="inline-flex min-h-11 items-center gap-2 rounded-ui text-sm text-muted transition-colors duration-150 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+        >
+          <Icon
+            name="arrow"
+            className={`h-4 w-4 ${showFilters ? "-rotate-90" : "rotate-90"}`}
+          />
+          <span className="underline underline-offset-4">Filtros</span>
+          <span>· Próximamente</span>
+        </button>
+        <div
+          id="search-filters-preview"
+          hidden={!showFilters}
+          className="mt-2 border-t border-line pt-4"
+        >
+          <p id="search-filters-preview-help" className="text-sm text-muted">
+            Vista previa. Estos filtros aún no están disponibles y no se aplican
+            a la búsqueda.
+          </p>
+          <fieldset
+            disabled
+            aria-describedby="search-filters-preview-help"
+            className="mt-4 grid gap-5 sm:grid-cols-2"
+          >
+            <legend className="sr-only">Filtros previstos</legend>
+            <fieldset>
+              <legend className="text-sm font-semibold text-muted">
+                Radio de búsqueda
+              </legend>
+              <div className="mt-2 grid grid-cols-4 gap-2 opacity-60">
+                {[2, 5, 10, 20].map((radius) => (
+                  <label
+                    key={radius}
+                    className="flex min-h-11 cursor-not-allowed items-center justify-center rounded-ui border border-input-border bg-surface px-2 text-sm text-muted"
+                  >
+                    <input
+                      type="radio"
+                      name="previewRadius"
+                      value={radius}
+                      className="sr-only"
+                    />
                     {radius} km
-                  </span>
-                </label>
-              ))}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <div>
+              <label
+                htmlFor="search-breed-preview"
+                className="block text-sm font-semibold text-muted"
+              >
+                Raza
+              </label>
+              <select
+                id="search-breed-preview"
+                className="mt-2 min-h-11 w-full cursor-not-allowed rounded-ui border border-input-border bg-surface px-3 py-2 text-base text-muted opacity-60"
+              >
+                <option>Cualquier raza</option>
+              </select>
             </div>
           </fieldset>
-          <div>
-            <label htmlFor="search-breed" className="block font-semibold">
-              Raza (opcional)
-            </label>
-            <select
-              id="search-breed"
-              name="breed"
-              className="mt-2 w-full cursor-not-allowed rounded-ui border border-input-border bg-surface px-3 py-3 text-base opacity-50"
-            >
-              <option value="">Cualquier raza</option>
-              {breedOptions.map((breed) => (
-                <option key={breed} value={breed}>
-                  {breed}
-                </option>
-              ))}
-            </select>
-          </div>
         </div>
-      </fieldset>
+      </div>
 
       <p className="mt-6 text-sm text-muted">
-        La foto se envía para compararla con los reportes.
+        La foto se enviará para compararla con los reportes.
       </p>
       <button
         type="submit"
@@ -167,12 +180,28 @@ export default function SearchByImageForm() {
       <div role="status" aria-live="polite" className="form-feedback">
         {isSearching ? "Comparando la foto con los reportes…" : null}
         {matches?.length === 0
-          ? "No encontramos candidatos para esta búsqueda."
+          ? "No encontramos candidatos para esta búsqueda. Prueba con otra foto clara de tu perrito."
           : null}
         {matches && matches.length > 0
           ? `Posibles coincidencias: ${matches.length}.`
           : null}
       </div>
+      {matches?.length === 0 ? (
+        <button
+          type="button"
+          className="text-action mt-2"
+          onClick={() => inputRef.current?.click()}
+        >
+          Elegir otra foto
+        </button>
+      ) : null}
+      {matches && matches.length > 0 ? (
+        <p className="mt-4 text-sm text-muted">
+          Los candidatos están ordenados por parecido con tu foto. Revisa sus
+          características y el lugar del hallazgo. Una coincidencia no confirma
+          que sea tu perrito.
+        </p>
+      ) : null}
       {matches && matches.length > 0 ? (
         <ol className="mt-4 grid gap-4" aria-label="Posibles coincidencias">
           {matches.map((match) => (
@@ -187,9 +216,6 @@ export default function SearchByImageForm() {
               />
               <div className="min-w-0 [overflow-wrap:anywhere]">
                 <p className="font-semibold">{match.location}</p>
-                <p className="mt-1 text-sm text-muted">
-                  Similitud visual: {match.similarity.toFixed(2)}
-                </p>
                 <Link
                   className="text-action"
                   href={`/reportes/${encodeURIComponent(match.id)}`}
