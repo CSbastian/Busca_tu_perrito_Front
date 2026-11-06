@@ -353,3 +353,9 @@ html {
   padding-block: 24px;
   border-block: 1px solid var(--color-line);
 }
+
+.report-contact-call {
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 20px;
+}

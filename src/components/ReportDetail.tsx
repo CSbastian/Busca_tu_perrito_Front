@@ -126,7 +126,7 @@ export default function ReportDetail({ id }: { id: string }) {
               {report.contactPhone ? (
                 <div>
                   <dt className="text-sm font-bold text-muted">Teléfono</dt>
-                  <dd>{report.contactPhone}</dd>
+                  <dd className="mt-1">{report.contactPhone}</dd>
                 </div>
               ) : null}
             </dl>
@@ -135,6 +135,19 @@ export default function ReportDetail({ id }: { id: string }) {
               Este reporte no incluye datos de contacto.
             </p>
           )}
+          {report.contactPhone ? (
+            <a
+              href={`tel:${report.contactPhone.replace(/[^+0-9]/g, "")}`}
+              className="button-primary report-contact-call"
+              aria-label={`Llamar al contacto: ${report.contactPhone}`}
+            >
+              <Icon name="phone" /> Llamar al contacto
+            </a>
+          ) : report.contactName ? (
+            <p className="mt-3 text-sm text-muted">
+              Este reporte no incluye un teléfono de contacto.
+            </p>
+          ) : null}
         </section>
       </div>
     </article>
