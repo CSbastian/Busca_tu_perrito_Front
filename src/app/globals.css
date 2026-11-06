@@ -101,6 +101,13 @@ html {
     border-color 150ms,
     background-color 150ms;
 }
+.search-upload-area {
+  min-height: 240px;
+}
+.search-upload-area > div {
+  width: 100%;
+  min-width: 0;
+}
 .upload-area:hover {
   border-color: #b45309;
   background: #fff0da;
@@ -183,6 +190,60 @@ html {
   gap: var(--layout-gap-fields);
   margin-top: 16px;
 }
+.report-location-feedback:not(:empty) {
+  margin-top: 8px;
+}
+.report-footer {
+  display: grid;
+  gap: 16px;
+  margin-top: 32px;
+  border-top: 1px solid var(--color-line);
+  padding-top: 24px;
+}
+.report-success {
+  margin-top: 32px;
+}
+.report-success-summary {
+  margin-top: 24px;
+  padding: 24px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-ui);
+  background: var(--color-surface);
+  overflow-wrap: anywhere;
+}
+.report-success-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 24px;
+}
+.report-success-actions .button-primary {
+  width: auto;
+}
+.button-secondary {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-ui);
+  background: var(--color-surface);
+  color: var(--color-accent);
+  font-weight: 700;
+  transition:
+    background-color 150ms,
+    border-color 150ms;
+}
+.button-secondary:hover {
+  background: var(--color-soft);
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent);
+}
+.button-secondary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 4px;
+}
 .report-contact legend {
   padding: 0;
 }
@@ -209,15 +270,73 @@ html {
     max-width: var(--layout-width-report);
   }
   .report-fields {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    position: relative;
+    grid-template-columns: 300px minmax(0, 1fr);
+    column-gap: 40px;
     align-items: start;
   }
-  .report-location,
-  .report-contact {
-    grid-column: 1 / -1;
+  .report-fields::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 340px;
+    border-left: 1px solid var(--color-line);
+    pointer-events: none;
   }
-  .report-description textarea {
-    min-height: 208px;
+  .report-photo {
+    grid-column: 1;
+    grid-row: 1 / 4;
+  }
+  .report-location,
+  .report-description,
+  .report-contact {
+    padding-left: 32px;
+  }
+  .report-location {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .report-description {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .report-contact {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .report-photo-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    min-height: 240px;
+    padding: 24px 16px;
+    border: 1px dashed var(--color-input-border);
+    border-radius: var(--radius-ui);
+    background: var(--color-surface);
+  }
+  .report-photo-actions > button {
+    min-height: 44px;
+    padding: 10px 12px;
+    border-style: solid;
+    border-color: var(--color-line);
+  }
+  .report-photo-actions > button:hover {
+    border-color: var(--color-accent);
+  }
+  .report-footer {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 32px;
+  }
+  .report-footer > p {
+    max-width: 440px;
+  }
+  .report-submit {
+    width: auto;
+    margin-left: auto;
+    min-width: 200px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -227,63 +346,4 @@ html {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
-}
-
-.search-upload-area {
-  min-height: 240px;
-}
-.search-upload-area > div {
-  width: 100%;
-  min-width: 0;
-}
-
-.report-success {
-  margin-top: 32px;
-}
-
-.report-success-summary {
-  margin-top: 24px;
-  padding: 24px;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-ui);
-  background: var(--color-surface);
-  overflow-wrap: anywhere;
-}
-
-.report-success-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.report-success-actions .button-primary {
-  width: auto;
-}
-
-.button-secondary {
-  display: inline-flex;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  padding: 12px 24px;
-  border: 1px solid var(--color-input-border);
-  border-radius: var(--radius-ui);
-  background: var(--color-surface);
-  color: var(--color-accent);
-  font-weight: 700;
-  transition:
-    background-color 150ms,
-    border-color 150ms;
-}
-
-.button-secondary:hover {
-  background: var(--color-soft);
-  color: var(--color-accent-hover);
-  border-color: var(--color-accent);
-}
-
-.button-secondary:focus-visible {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 4px;
 }

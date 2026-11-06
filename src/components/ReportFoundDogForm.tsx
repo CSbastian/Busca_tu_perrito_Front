@@ -114,11 +114,6 @@ function ReportForm({
       aria-describedby={`report-help${error ? " report-error" : ""}`}
       className="btp-form"
     >
-      <p id="report-help" className="mb-6 max-w-prose text-sm text-muted">
-        La ubicación, la foto y la descripción son obligatorias. Al publicar, la
-        foto y los datos del reporte quedan disponibles para quienes encuentren
-        el reporte.
-      </p>
       <fieldset
         disabled={isSubmitting}
         className="report-fields disabled:opacity-60"
@@ -148,7 +143,7 @@ function ReportForm({
               type="button"
               onClick={detectLocation}
               disabled={isLocating}
-              className="mt-2 min-h-11 justify-self-start rounded-ui bg-soft px-4 py-3 text-sm font-semibold text-accent transition-colors duration-150 hover:bg-soft-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
+              className="mt-2 min-h-11 justify-self-start rounded-ui border border-input-border bg-soft px-4 py-3 text-sm font-semibold text-accent-hover transition-colors duration-150 hover:bg-soft-strong focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent disabled:opacity-50"
             >
               {isLocating ? "Detectando…" : "Detectar"}
             </button>
@@ -165,25 +160,21 @@ function ReportForm({
           <p
             id="report-location-help"
             role={locationError ? "alert" : "status"}
-            className={`mt-2 text-sm ${locationError ? "text-red-700" : "text-muted"}`}
+            className={`report-location-feedback text-sm ${locationError ? "text-red-700" : "text-muted"}`}
           >
-            {locationMessage ||
-              "Escribe el lugar o detecta tus coordenadas actuales. Revisa que corresponda al lugar del hallazgo."}
+            {locationMessage}
           </p>
         </div>
         <div className="report-photo">
           <p id="report-photo-label" className="font-semibold">
             Foto del perrito
           </p>
-          <p id="report-image-help" className="mt-2 text-sm text-muted">
-            Una imagen JPG, PNG o WebP. Máximo 5 MB.
-          </p>
           <div
             role="group"
             aria-labelledby="report-photo-label"
-            aria-describedby={`report-image-help report-camera-help${fieldError?.field === "image" ? " report-image-error" : ""}`}
+            aria-describedby={`report-image-help${fieldError?.field === "image" ? " report-image-error" : ""}`}
             aria-invalid={fieldError?.field === "image" || undefined}
-            className="mt-3 grid grid-cols-2 gap-3"
+            className="report-photo-actions mt-2 grid grid-cols-2 gap-3"
           >
             <button
               type="button"
@@ -203,6 +194,9 @@ function ReportForm({
               Subir archivo
             </button>
           </div>
+          <p id="report-image-help" className="mt-2 text-sm text-muted">
+            JPG, PNG o WebP · Máx. 5 MB
+          </p>
           <input
             ref={cameraRef}
             type="file"
@@ -229,10 +223,6 @@ function ReportForm({
               {fieldError.message}
             </p>
           ) : null}
-          <p id="report-camera-help" className="mt-2 text-sm text-muted">
-            La cámara se abrirá en dispositivos compatibles; en otros aparecerá
-            el selector de archivos.
-          </p>
           {fileName !== null && previewUrl ? (
             <figure className="mt-4">
               <img
@@ -288,6 +278,10 @@ function ReportForm({
         </div>
         <fieldset className="report-contact">
           <legend className="font-semibold">Contacto (opcional)</legend>
+          <p className="mt-2 text-sm text-muted">
+            Si omites el teléfono, quienes vean el reporte no podrán llamarte
+            desde aquí.
+          </p>
           <div className="contact-fields">
             <div>
               <label
@@ -349,15 +343,18 @@ function ReportForm({
           {error}
         </p>
       ) : null}
-      <button
-        type="submit"
-        disabled={
-          !imageReady || isSubmitting || isLocating || reportId !== null
-        }
-        className="button-primary mt-6"
-      >
-        {isSubmitting ? "Procesando…" : "Publicar reporte"}
-      </button>
+      <div className="report-footer">
+        <p id="report-help" className="text-sm text-muted">
+          La foto y los datos que ingreses quedarán visibles en el reporte.
+        </p>
+        <button
+          type="submit"
+          disabled={!imageReady || isSubmitting || isLocating}
+          className="button-primary report-submit"
+        >
+          {isSubmitting ? "Procesando…" : "Publicar reporte"}
+        </button>
+      </div>
       <p role="status" className="form-feedback">
         {isSubmitting ? "Publicando el reporte…" : null}
       </p>
