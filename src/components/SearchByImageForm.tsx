@@ -22,6 +22,7 @@ export default function SearchByImageForm() {
     previewUrl,
     isImageReady,
     error,
+    imageError,
     isSearching,
     matches,
     handleSubmit,
@@ -60,8 +61,8 @@ export default function SearchByImageForm() {
           accept={acceptedImageTypes.join(",")}
           onChange={handleFileChange}
           disabled={isSearching}
-          aria-describedby={`image-help${error ? " search-error" : ""}`}
-          aria-invalid={error ? true : undefined}
+          aria-describedby={`image-help${imageError ? " search-image-error" : ""}`}
+          aria-invalid={imageError ? true : undefined}
           className="absolute inset-0 h-full w-full cursor-pointer opacity-0 disabled:cursor-not-allowed"
         />
       </div>
@@ -90,9 +91,13 @@ export default function SearchByImageForm() {
         </figure>
       ) : null}
 
-      {error ? (
-        <p id="search-error" role="alert" className="mt-4 text-sm text-red-700">
-          {error}
+      {imageError ? (
+        <p
+          id="search-image-error"
+          role="alert"
+          className="mt-4 text-sm text-red-700"
+        >
+          {imageError}
         </p>
       ) : null}
 
@@ -154,6 +159,11 @@ export default function SearchByImageForm() {
       >
         <Icon name="search" /> {isSearching ? "Buscando…" : "Buscar"}
       </button>
+      {error ? (
+        <p role="alert" className="mt-4 text-sm text-red-700">
+          {error}
+        </p>
+      ) : null}
       <div role="status" aria-live="polite" className="form-feedback">
         {isSearching ? "Comparando la foto con los reportes…" : null}
         {matches?.length === 0

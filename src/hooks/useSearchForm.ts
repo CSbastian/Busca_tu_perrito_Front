@@ -2,7 +2,7 @@ import { useRef, useState, useSyncExternalStore } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { searchReportsByImage } from "@/services/searches.api";
 import type { ReportSearchMatch } from "@/services/searches.api";
-import { describeApiError } from "@/services/api-errors";
+import { describeApiError, isImageApiError } from "@/services/api-errors";
 import { validateImage } from "@/validation/image.validation";
 
 type SearchSnapshot = {
@@ -43,6 +43,7 @@ export function useSearchForm() {
   );
   const [readyPreview, setReadyPreview] = useState<string | null>(null);
   const isImageReady = previewUrl !== null && readyPreview === previewUrl;
+  const [imageError, setImageError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const searchInProgress = useRef(false);
@@ -57,11 +58,12 @@ export function useSearchForm() {
     if (!selected) return;
 
     setError(null);
+    setImageError(null);
 
     const imageError = validateImage(selected);
     if (imageError) {
       clearImage();
-      setError(imageError);
+      setImageError(imageError);
       return;
     }
 
@@ -76,7 +78,7 @@ export function useSearchForm() {
     event.preventDefault();
     if (searchInProgress.current) return;
     if (!file || !isImageReady) {
-      setError("Selecciona una imagen válida antes de buscar.");
+      setImageError("Selecciona una imagen válida antes de buscar.");
       return;
     }
 
@@ -91,6 +93,10 @@ export function useSearchForm() {
         updateSearch({ ...pendingSearch, matches: results });
       }
     } catch (error) {
+      if (isImageApiError(error)) {
+        setImageError(describeApiError(error, "Selecciona otra foto."));
+        return;
+      }
       setError(
         describeApiError(
           error,
@@ -109,11 +115,12 @@ export function useSearchForm() {
 
   function handleImageError() {
     clearImage();
-    setError("No pudimos leer esta imagen. Selecciona otro archivo.");
+    setImageError("No pudimos leer esta imagen. Selecciona otro archivo.");
   }
 
   function handleRemoveImage() {
     clearImage();
+    setImageError(null);
     setError(null);
     inputRef.current?.focus();
   }
@@ -124,6 +131,7 @@ export function useSearchForm() {
     previewUrl,
     isImageReady,
     error,
+    imageError,
     isSearching,
     matches,
     handleSubmit,
