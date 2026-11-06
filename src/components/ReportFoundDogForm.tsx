@@ -15,6 +15,8 @@ export default function ReportFoundDogForm() {
     previewUrl,
     imageReady,
     error,
+    fieldError,
+    clearFieldError,
     isSubmitting,
     reportId,
     location,
@@ -39,7 +41,12 @@ export default function ReportFoundDogForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      onChange={handleFormChange}
+      noValidate
+      onChange={(event) => {
+        handleFormChange();
+        const name = event.target.getAttribute("name");
+        if (name) clearFieldError(name);
+      }}
       aria-busy={isSubmitting}
       aria-describedby={`report-help${error ? " report-error" : ""}`}
       className="btp-form"
@@ -62,13 +69,15 @@ export default function ReportFoundDogForm() {
             <input
               id="report-location"
               name="location"
+              data-report-field="location"
+              aria-invalid={fieldError?.field === "location" || undefined}
+              aria-describedby={`report-location-help${fieldError?.field === "location" ? " report-location-error" : ""}`}
               value={location}
               onChange={handleLocationChange}
               disabled={isLocating}
               required
               maxLength={200}
               placeholder="Comuna y calle o lugar de referencia"
-              aria-describedby="report-location-help"
               className={`${fieldClassName} min-w-0 flex-1 disabled:opacity-50`}
             />
             <button
@@ -80,6 +89,15 @@ export default function ReportFoundDogForm() {
               {isLocating ? "Detectando…" : "Detectar"}
             </button>
           </div>
+          {fieldError?.field === "location" ? (
+            <p
+              id="report-location-error"
+              role="alert"
+              className="mt-2 text-sm text-red-700"
+            >
+              {fieldError.message}
+            </p>
+          ) : null}
           <p
             id="report-location-help"
             role={locationError ? "alert" : "status"}
@@ -99,7 +117,8 @@ export default function ReportFoundDogForm() {
           <div
             role="group"
             aria-labelledby="report-photo-label"
-            aria-describedby="report-image-help report-camera-help"
+            aria-describedby={`report-image-help report-camera-help${fieldError?.field === "image" ? " report-image-error" : ""}`}
+            aria-invalid={fieldError?.field === "image" || undefined}
             className="mt-3 grid grid-cols-2 gap-3"
           >
             <button
@@ -137,6 +156,15 @@ export default function ReportFoundDogForm() {
             aria-label="Subir foto del perrito"
             className="hidden"
           />
+          {fieldError?.field === "image" ? (
+            <p
+              id="report-image-error"
+              role="alert"
+              className="mt-2 text-sm text-red-700"
+            >
+              {fieldError.message}
+            </p>
+          ) : null}
           <p id="report-camera-help" className="mt-2 text-sm text-muted">
             La cámara se abrirá en dispositivos compatibles; en otros aparecerá
             el selector de archivos.
@@ -171,12 +199,28 @@ export default function ReportFoundDogForm() {
           <textarea
             id="report-description"
             name="description"
+            data-report-field="description"
+            aria-invalid={fieldError?.field === "description" || undefined}
+            aria-describedby={
+              fieldError?.field === "description"
+                ? "report-description-error"
+                : undefined
+            }
             required
             maxLength={1000}
             rows={4}
             placeholder="Color, tamaño, collar y otras características que ayuden a reconocerlo"
             className={fieldClassName}
           />
+          {fieldError?.field === "description" ? (
+            <p
+              id="report-description-error"
+              role="alert"
+              className="mt-2 text-sm text-red-700"
+            >
+              {fieldError.message}
+            </p>
+          ) : null}
         </div>
         <fieldset className="report-contact">
           <legend className="font-semibold">Contacto (opcional)</legend>
@@ -191,10 +235,26 @@ export default function ReportFoundDogForm() {
               <input
                 id="report-contact-name"
                 name="contactName"
+                data-report-field="contactName"
+                aria-invalid={fieldError?.field === "contactName" || undefined}
+                aria-describedby={
+                  fieldError?.field === "contactName"
+                    ? "report-contact-name-error"
+                    : undefined
+                }
                 autoComplete="name"
                 maxLength={100}
                 className={fieldClassName}
               />
+              {fieldError?.field === "contactName" ? (
+                <p
+                  id="report-contact-name-error"
+                  role="alert"
+                  className="mt-2 text-sm text-red-700"
+                >
+                  {fieldError.message}
+                </p>
+              ) : null}
             </div>
             <div>
               <label
@@ -206,7 +266,15 @@ export default function ReportFoundDogForm() {
               <ChileanPhoneInput
                 id="report-contact-phone"
                 name="contactPhone"
-                onValueChange={handleFormChange}
+                onValueChange={() => {
+                  handleFormChange();
+                  clearFieldError("contactPhone");
+                }}
+                error={
+                  fieldError?.field === "contactPhone"
+                    ? fieldError.message
+                    : undefined
+                }
               />
             </div>
           </div>

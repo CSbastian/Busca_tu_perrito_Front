@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { validateReport } from "../src/validation/report.validation.ts";
+import {
+  validateReport,
+  validateReportIssue,
+} from "../src/validation/report.validation.ts";
 
 function validReport() {
   const data = new FormData();
@@ -69,4 +72,22 @@ test("accepts empty and complete Chilean phones and rejects partial phones", () 
       "Completa los 9 dígitos del teléfono o deja el campo vacío.",
     );
   }
+});
+
+test("identifies the field to correct while preserving the message contract", () => {
+  for (const [field, value] of [
+    ["location", " "],
+    ["description", " "],
+    ["contactName", "x".repeat(101)],
+    ["contactPhone", "+56 9"],
+  ]) {
+    const data = validReport();
+    data.set(field, value);
+    const issue = validateReportIssue(data);
+    assert.equal(issue.field, field);
+    assert.equal(issue.message, validateReport(data));
+  }
+  const data = validReport();
+  data.delete("image");
+  assert.equal(validateReportIssue(data).field, "image");
 });

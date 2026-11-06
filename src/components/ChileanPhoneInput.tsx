@@ -29,10 +29,12 @@ export default function ChileanPhoneInput({
   id,
   name,
   onValueChange,
+  error,
 }: {
   id: string;
   name: string;
   onValueChange: () => void;
+  error?: string;
 }) {
   const [digits, setDigits] = useState("");
   const formatted = formatDigits(digits);
@@ -115,7 +117,9 @@ export default function ChileanPhoneInput({
           type="tel"
           inputMode="numeric"
           autoComplete="tel-national"
-          aria-describedby={helpId}
+          data-report-field="contactPhone"
+          aria-invalid={!!error || undefined}
+          aria-describedby={`${helpId}${error ? ` ${id}-error` : ""}`}
           placeholder="9 1234 5678"
           value={formatted}
           onChange={handleChange}
@@ -126,6 +130,15 @@ export default function ChileanPhoneInput({
       <p id={helpId} className="mt-2 text-sm text-muted">
         Prefijo +56. Ingresa los 9 dígitos.
       </p>
+      {error ? (
+        <p
+          id={`${id}-error`}
+          role="alert"
+          className="mt-2 text-sm text-red-700"
+        >
+          {error}
+        </p>
+      ) : null}
       <input
         type="hidden"
         name={name}

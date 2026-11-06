@@ -2,14 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { createReport } from "@/services/reports.api";
 import { ApiError } from "@/services/api.client";
-import { describeApiError } from "@/services/api-errors";
-import { validateReport } from "@/validation/report.validation";
+import { describeApiError, isImageApiError } from "@/services/api-errors";
+import { validateReportIssue } from "@/validation/report.validation";
 import { validateImage } from "@/validation/image.validation";
 
 export function useReportForm() {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [imageReady, setImageReady] = useState(false);
+  const [fieldError, setFieldError] =
+    useState<ReturnType<typeof validateReportIssue>>(null);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reportId, setReportId] = useState<string | null>(null);
@@ -50,11 +52,12 @@ export function useReportForm() {
     setFile(null);
     setPreviewUrl(null);
     setImageReady(false);
+    setFieldError(null);
     setError(null);
 
     const imageError = validateImage(selected);
     if (imageError) {
-      setError(imageError);
+      setFieldError({ field: "image", message: imageError });
       return;
     }
     setFile(selected);
@@ -108,14 +111,24 @@ export function useReportForm() {
     if (submitInProgress.current || isLocating || reportId !== null) return;
     const data = new FormData(event.currentTarget);
     if (file) data.set("image", file);
-    const validationError = validateReport(data);
+    const validationError = validateReportIssue(data);
     if (validationError || !imageReady) {
-      setError(
-        validationError ?? "No pudimos leer la foto. Selecciona otra imagen.",
-      );
+      const issue = validationError ?? {
+        field: "image" as const,
+        message: "No pudimos leer la foto. Selecciona otra imagen.",
+      };
+      setFieldError(issue);
+      const target =
+        issue.field === "image"
+          ? uploadButtonRef.current
+          : event.currentTarget.querySelector<HTMLElement>(
+              '[data-report-field="' + issue.field + '"]',
+            );
+      target?.focus();
       return;
     }
 
+    setFieldError(null);
     setError(null);
     for (const field of ["contactName", "contactPhone"]) {
       const value = data.get(field);
@@ -128,6 +141,13 @@ export function useReportForm() {
       const report = await createReport(data);
       setReportId(report.id);
     } catch (error) {
+      if (isImageApiError(error)) {
+        setFieldError({
+          field: "image",
+          message: describeApiError(error, "Selecciona otra foto."),
+        });
+        return;
+      }
       const mayHaveSaved =
         !(error instanceof ApiError) ||
         error.status === 201 ||
@@ -149,6 +169,10 @@ export function useReportForm() {
     }
   }
 
+  function clearFieldError(field: string) {
+    setFieldError((current) => (current?.field === field ? null : current));
+  }
+
   function handleFormChange() {
     setReportId(null);
   }
@@ -167,13 +191,17 @@ export function useReportForm() {
     setImageReady(false);
     setFile(null);
     setPreviewUrl(null);
-    setError("No pudimos leer la foto. Selecciona otra imagen.");
+    setFieldError({
+      field: "image",
+      message: "No pudimos leer la foto. Selecciona otra imagen.",
+    });
   }
 
   function handleRemoveImage() {
     setFile(null);
     setPreviewUrl(null);
     setImageReady(false);
+    clearFieldError("image");
     setError(null);
     setReportId(null);
     uploadButtonRef.current?.focus();
@@ -184,6 +212,8 @@ export function useReportForm() {
     previewUrl,
     imageReady,
     error,
+    fieldError,
+    clearFieldError,
     isSubmitting,
     reportId,
     location,

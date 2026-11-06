@@ -25,3 +25,16 @@ export function describeApiError(error: unknown, fallback: string) {
       return fallback;
   }
 }
+
+export function isImageApiError(error: unknown): boolean {
+  return (
+    error instanceof ApiError &&
+    [
+      "invalid_image",
+      "animated_image_not_supported",
+      "unsupported_image_format",
+      "image_too_large",
+      "request_too_large",
+    ].includes(error.code ?? "")
+  );
+}
