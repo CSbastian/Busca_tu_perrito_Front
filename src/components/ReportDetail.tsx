@@ -58,17 +58,20 @@ export default function ReportDetail({ id }: { id: string }) {
   }
   if (!report) {
     return (
-      <p
-        role="status"
-        className="rounded-ui border border-line bg-surface p-5 text-muted"
-      >
-        Cargando reporte…
-      </p>
+      <div className="report-detail-layout" aria-busy="true">
+        <div
+          className="aspect-[4/3] rounded-ui border border-line bg-surface"
+          aria-hidden="true"
+        />
+        <p role="status" className="report-detail-content text-muted">
+          Cargando reporte…
+        </p>
+      </div>
     );
   }
 
   return (
-    <article className="grid gap-6 min-[960px]:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+    <article className="report-detail-layout">
       <div className="relative grid aspect-[4/3] w-full place-items-center self-start overflow-hidden rounded-ui border border-line bg-surface">
         {imageUnavailable ? (
           <p
@@ -91,8 +94,8 @@ export default function ReportDetail({ id }: { id: string }) {
         )}
       </div>
 
-      <div className="grid min-w-0 content-start gap-4 [overflow-wrap:anywhere]">
-        <section className="rounded-ui border border-line bg-surface p-5 sm:p-6">
+      <div className="report-detail-content grid min-w-0 content-start gap-6 [overflow-wrap:anywhere]">
+        <section className="report-detail-section">
           <p className="mb-2 text-sm font-bold text-muted">
             Lugar del hallazgo
           </p>
@@ -107,13 +110,13 @@ export default function ReportDetail({ id }: { id: string }) {
               })}
             </time>
           </p>
-          <div className="mt-5 border-t border-line pt-5">
-            <h3 className="font-bold text-ink">Descripción</h3>
-            <p className="mt-2 whitespace-pre-line">{report.description}</p>
-          </div>
+        </section>
+        <section className="report-detail-section">
+          <h2 className="text-xl text-ink">Descripción</h2>
+          <p className="mt-2 whitespace-pre-line">{report.description}</p>
         </section>
 
-        <section className="rounded-ui border border-line bg-canvas p-5 sm:p-6">
+        <section className="report-detail-section">
           <h2 className="text-xl text-ink">Contacto del reporte</h2>
           {report.contactName || report.contactPhone ? (
             <dl className="mt-3 grid gap-3">
