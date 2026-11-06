@@ -17,24 +17,29 @@ colors:
   error: "oklch(50.5% 0.213 27.518)"
 typography:
   display:
-    fontFamily: "DM Serif Display, Georgia, serif"
+    fontFamily: "Nunito, Arial, sans-serif"
     fontSize: "clamp(1.875rem, 5vw, 2.5rem)"
-    fontWeight: 400
+    fontWeight: 800
     lineHeight: 1.2
   headline:
-    fontFamily: "DM Serif Display, Georgia, serif"
+    fontFamily: "Nunito, Arial, sans-serif"
     fontSize: "1.5rem"
-    fontWeight: 400
+    fontWeight: 700
     lineHeight: "2rem"
   body:
-    fontFamily: "Nunito, Arial, sans-serif"
+    fontFamily: "DM Sans, Arial, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.625
   label:
-    fontFamily: "Nunito, Arial, sans-serif"
+    fontFamily: "DM Sans, Arial, sans-serif"
     fontSize: "1rem"
     fontWeight: 600
+    lineHeight: 1.625
+  help:
+    fontFamily: "DM Sans, Arial, sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
     lineHeight: 1.625
 rounded:
   ui: "7px"
@@ -64,6 +69,9 @@ components:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
     rounded: "{rounded.ui}"
+  text-action:
+    textColor: "{colors.accent}"
+    rounded: "{rounded.ui}"
   navigation-active:
     backgroundColor: "{colors.soft}"
     textColor: "{colors.accent}"
@@ -74,9 +82,11 @@ components:
 
 ## Overview
 
-Dirección **Cálido**, seleccionada por el usuario para Inicio, Buscar y Reportar. Reemplaza la dirección anterior azul/Arial. Se inspira en el mockup de `contexto-proyecto-btp/mockup-proyecto`: fondos crema, acento ámbar, texto café, títulos serif y cuerpo redondeado. La redondez de **7 px** conserva el ajuste elegido en la propuesta interactiva.
+Dirección **Cálido**, seleccionada por el usuario para Inicio, Buscar y Reportar. Reemplaza la dirección anterior azul/Arial. Se inspira en el mockup de `contexto-proyecto-btp/mockup-proyecto`: fondos crema, acento ámbar, texto café, títulos redondeados en Nunito y cuerpo en DM Sans. La redondez de **7 px** conserva el ajuste elegido en la propuesta interactiva.
 
 La interfaz busca cercanía y claridad para personas que buscan a un perro o reportan uno encontrado. `PRODUCT.md` conserva la autoridad sobre alcance y capacidades; las métricas, cobertura y afirmaciones ilustrativas del mockup no son hechos del producto.
+
+La refinación «Claridad cálida» conserva la paleta y los selectores de imagen con iconos. Refuerza la navegación activa, diferencia el peso de títulos y secciones y presenta una confirmación independiente después de publicar.
 
 ## Colors
 
@@ -91,19 +101,21 @@ La interfaz busca cercanía y claridad para personas que buscan a un perro o rep
 
 ## Typography
 
-**DM Serif Display 400** para títulos de página, títulos de acciones y marca. **Nunito 400/600/700/800** para cuerpo, etiquetas, navegación y acciones. Las fuentes se sirven localmente con `next/font/local`; archivos y licencias OFL en `public/fonts/`.
+**Nunito 700/800** para títulos y marca, con peso 800 como referencia principal. **DM Sans variable** para cuerpo, etiquetas, navegación y acciones, usando pesos 400/600/700. Las fuentes se sirven localmente con `next/font/local`; archivos y licencias OFL en `public/fonts/`. La combinación «Cercano» fue seleccionada por el usuario.
 
-Títulos de página: escala fluida entre 30 y 40 px, interlineado 1.2. Títulos de acciones y secciones: 24 px, peso 400. Cuerpo y campos editables: 16 px; ayuda: 14 px. Usar pesos 600 o 700 de Nunito para etiquetas y acciones, sin simular negrita en la serif. Mantener títulos equilibrados y texto secundario legible.
+Títulos de página: escala fluida entre 30 y 40 px, interlineado 1.2. Títulos de acciones y secciones: 24 px, peso 700. Cuerpo y campos editables: 16 px; ayuda: 14 px. Usar pesos 600 o 700 de DM Sans para etiquetas y acciones. Mantener títulos equilibrados y texto secundario legible.
 
 ## Layout
 
 Inicio y Buscar usan `.app-main`, con ancho máximo de lectura de 670 px incluyendo laterales de 24 px, centrado, espacio superior de 32 px en móvil y 40 px desde 640 px. Reportar conserva esa base hasta 959 px; desde 960 px usa `.app-main--report` con máximo de 960 px. La cabecera compartida tiene un máximo de 1024 px; marca y navegación se apilan en móvil y se distribuyen en fila desde 640 px.
 
-Inicio usa introducción centrada y acciones apiladas, búsqueda primero. La explicación queda después de ambas acciones, con tres pasos en filas. Desde 640 px cada fila alinea un título de hasta 190 px con su explicación; en móvil el texto queda debajo del título.
+Inicio aplica «Dos caminos»: título «¿Qué necesitas hacer?» alineado a la izquierda, una frase de orientación y dos acciones apiladas, búsqueda primero. Cada enlace reúne una etiqueta en DM Sans 700 y una flecha, con altura mínima de 88 px y padding de 20 px en móvil y 24 px desde 640 px. La explicación breve queda después de las acciones dentro de un desplegable nativo, cerrado inicialmente y accesible por teclado.
 
-Buscar mantiene la foto antes de los filtros; radio y raza comparten una fila desde 640 px y se apilan en móvil. Reportar mantiene el orden ubicación → foto → descripción → contacto → envío. Desde 960 px, foto y descripción comparten fila; ubicación y contacto abarcan todo el formulario. Nombre y teléfono comparten fila desde 640 px. No usar CSS `order` ni duplicar controles para reorganizar el contenido.
+Buscar aplica «Búsqueda directa»: título sin introducción repetida, zona de foto y botón principal dentro de la columna centrada, con resultados debajo. Reportar mantiene el orden ubicación → foto → descripción → contacto → envío. Desde 960 px se aplica la disposición «Foto y datos»: foto en una columna izquierda de 300 px y ubicación, descripción y contacto en la columna derecha flexible, con separación de 40 px. La foto abarca las tres filas de datos. La variante «Directo y completo» conserva todos los campos visibles y reúne cámara y archivo en una zona de carga de 240 px de alto mínimo. El pie alinea el aviso de publicación con la acción principal. El envío se alinea a la derecha con un ancho mínimo de 200 px. Nombre y teléfono comparten fila desde 640 px. La disposición móvil conserva su secuencia ubicación → foto → descripción → contacto. No usar CSS `order` ni duplicar controles para reorganizar el contenido.
 
-El formulario comienza a 28 px de su introducción; no se encierra en una tarjeta adicional. Los roles de layout se definen en `:root` mediante `--layout-width-reading`, `--layout-width-report`, `--layout-gap-inline` (8 px), `--layout-gap-fields` (24 px) y `--layout-gap-sections` (32 px). Las vistas previas y mensajes largos crecen dentro de su grupo y desplazan naturalmente lo que sigue.
+El formulario comienza a 32 px de su introducción; no se encierra en una tarjeta adicional. Los roles de layout se definen en `:root` mediante `--layout-width-reading`, `--layout-width-report`, `--layout-gap-inline` (8 px), `--layout-gap-fields` (24 px) y `--layout-gap-sections` (32 px). Las vistas previas y mensajes largos crecen dentro de su grupo y desplazan naturalmente lo que sigue.
+
+El detalle del reporte utiliza el ancho de Reportar y dos columnas desde 960 px: foto de proporción 4:3 en una columna de 300 px y contenido flexible, separados por 40 px. Un único borde vertical continuo delimita el contenido, con 32 px de padding interior. En tamaños menores apila foto y datos sin el separador vertical.
 
 ## Elevation & Depth
 
@@ -115,21 +127,27 @@ Paneles, formularios, botones, navegación y vistas previas usan `rounded-ui` de
 
 ## Components
 
-- **Cabecera:** marca serif con huella; navegación activa con crema suave, ámbar, subrayado y `aria-current`.
-- **Acciones del inicio:** enlaces completos, título serif, descripción y flecha. Búsqueda en ámbar profundo con texto blanco; reporte en crema suave. Hover y foco subrayan la etiqueta sin mover el contenido.
-- **Carga de búsqueda:** zona amplia de 176 px mínimo con icono, texto y selector de archivo nativo accesible. Muestra foco al entrar por teclado; conserva vista previa, validaciones, eliminación y bloqueo durante búsqueda.
-- **Radio:** grupo nativo de opciones 2, 5, 10 y 20 km; selección ámbar y blanco, contorno visible al navegar con teclado. Valor inicial 5 km.
-- **Campos:** fondo crema suave, borde café, radio de 7 px y texto de 16 px. Etiquetas siempre visibles y consistentes en Nunito 600; ayuda y errores próximos al campo. En móvil, el campo de ubicación ocupa toda la fila y «Detectar» queda debajo; desde 640 px se presentan juntos.
-- **Fotos del reporte:** dos controles con iconos y texto, para cámara y archivo. Conservan sus funciones y limitaciones del navegador.
-- **Botones:** `.button-primary` unifica las acciones de Buscar y Reportar: mínimo 48 px, Nunito 700, ámbar profundo y blanco; hover más oscuro; deshabilitado con semántica nativa, opacidad 0.5 y cursor de indisponibilidad. `.text-action` ofrece acciones de quitar foto con área mínima de 44 px.
+- **Cabecera:** marca Nunito 800 con huella; navegación activa con crema suave, ámbar, subrayado y `aria-current`. El texto activo usa `accent-hover` sobre `soft` para asegurar contraste.
+- **Acciones del inicio:** enlaces completos con una sola etiqueta en DM Sans 700 de 18 px y flecha. Búsqueda en ámbar profundo con texto blanco; reporte en crema suave. Hover y foco subrayan la etiqueta sin mover el contenido. «¿Cómo funciona la búsqueda?» despliega la explicación de comparación con reportes y la advertencia de identidad, conservando el indicador nativo de apertura.
+- **Carga de búsqueda:** zona de 240 px mínimo con selector de archivo nativo accesible. La vista previa se integra en la misma zona, con acciones de cambiar y quitar foto. Formatos y límite aparecen en una línea debajo. El aviso de envío queda junto a Buscar; la búsqueda vacía ofrece «Elegir otra foto». Conserva foco, validación y bloqueo durante la petición.
+- **Filtros de búsqueda:** botón textual sutil «Filtros · Próximamente», cerrado inicialmente. Al abrir muestra una vista previa de radio y raza dentro de un fieldset deshabilitado y aclara que no se aplican a la búsqueda. La apertura se comunica con `aria-expanded` y `aria-controls`.
+- **Campos:** fondo crema suave, borde café, radio de 7 px y texto de 16 px. Etiquetas siempre visibles y consistentes en DM Sans 600; ayuda y errores próximos al campo. En móvil, el campo de ubicación ocupa toda la fila y «Detectar» queda debajo; desde 640 px se presentan juntos.
+- **Fotos del reporte:** dos controles con iconos y texto, para cámara y archivo. La zona de carga comienza 8 px después de su etiqueta, alineada con el campo de ubicación en escritorio. La ayuda de formatos y tamaño máximo aparece 8 px debajo de la zona de carga y conserva su asociación accesible. Los errores de imagen aparecen después de la ayuda.
+- **Botones:** `.button-primary` unifica las acciones de Buscar y Reportar: mínimo 48 px, DM Sans 700, ámbar profundo y blanco; hover más oscuro; deshabilitado con semántica nativa, opacidad 0.5 y cursor de indisponibilidad. `.text-action` ofrece acciones de quitar foto con área mínima de 44 px.
 - **Movimiento:** transiciones discretas de color de 150 ms en acciones, sin animaciones de entrada; `prefers-reduced-motion` reduce transiciones y animaciones.
+- **Textos del reporte:** título sin introducción repetida ni encabezado «Datos del hallazgo». La ayuda de ubicación aparece al detectar o ante un error. El aviso de visibilidad de foto y datos permanece junto al envío. Estos textos breves se aplican también en móvil, manteniendo su disposición de campos.
 - **Feedback:** `.form-feedback` unifica el espaciado y oculta el espacio del estado cuando está vacío. Distinguir carga, búsqueda sin candidatos, error y publicación confirmada. Al quitar una foto del reporte, devolver el foco a «Subir archivo».
+
+- **Resultados y detalle:** candidatos en lista con foto, ubicación y enlace al reporte. Conservan el orden de parecido y explican que una coincidencia requiere revisión, sin mostrar un puntaje numérico. El detalle separa ubicación, descripción y contacto con espaciado y divisores horizontales, sin tarjetas anidadas. El teléfono se presenta con una acción destacada «Llamar al contacto». La ausencia de teléfono se explica incluso cuando existe un nombre. La carga reserva la proporción de la foto y anuncia su estado; el error ofrece una acción secundaria de reintento. Se conserva la alternativa de foto no disponible.
+- **Página 404:** utiliza la paleta cálida, el título Nunito y acciones para volver al inicio o buscar.
+
+La confirmación de publicación muestra el lugar y las acciones «Ver reporte» y «Crear otro reporte». Esta última inicia un formulario nuevo. El foco se mueve al encabezado de confirmación y regresa al primer campo al crear otro reporte. El detalle ofrece un enlace de llamada cuando existe teléfono. En escritorio, un único separador vertical continuo y 32 px de padding separan los campos de la columna de foto. El separador abarca toda la altura del grupo, incluidos sus espacios. Contacto no lleva borde superior que atraviese su leyenda. Los selectores de cámara y archivo conservan su diseño e iconos actuales.
 
 ## Do's and Don'ts
 
 - **Do** reutilizar los tokens, fuentes locales y radio de 7 px en las tres pantallas.
 - **Do** mantener controles de al menos 44 px cuando corresponda, foco visible y campos editables de 16 px.
-- **Do** mantener la prioridad de búsqueda y el reporte accesible. Mostrar radio y raza deshabilitados mientras esos filtros no estén disponibles.
+- **Do** mantener la prioridad de búsqueda y el reporte accesible. Priorizar las funciones disponibles en Buscar.
 - **Don't** mezclar la antigua familia azul/pizarra con la nueva dirección en estas pantallas.
 - **Don't** copiar estadísticas, porcentajes de IA, cobertura, promesas de privacidad o reencuentros sin evidencia del producto.
 - **Don't** añadir efectos, fotos decorativas o tarjetas anidadas para sustituir la jerarquía de los formularios.
