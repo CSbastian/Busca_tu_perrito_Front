@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import ChileanPhoneInput from "@/components/ChileanPhoneInput";
 import Icon from "@/components/Icon";
 import { useReportForm } from "@/hooks/useReportForm";
@@ -10,6 +11,23 @@ const fieldClassName =
   "mt-2 w-full rounded-ui border border-input-border bg-surface px-3 py-3 text-base transition-colors duration-150 hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent";
 
 export default function ReportFoundDogForm() {
+  const [version, setVersion] = useState(0);
+  return (
+    <ReportForm
+      key={version}
+      focusFirstField={version > 0}
+      onNewReport={() => setVersion((value) => value + 1)}
+    />
+  );
+}
+
+function ReportForm({
+  onNewReport,
+  focusFirstField,
+}: {
+  onNewReport: () => void;
+  focusFirstField: boolean;
+}) {
   const {
     fileName,
     previewUrl,
@@ -37,6 +55,51 @@ export default function ReportFoundDogForm() {
     handleImageError,
     handleRemoveImage,
   } = useReportForm();
+
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    if (reportId !== null) successHeadingRef.current?.focus();
+  }, [reportId]);
+
+  if (reportId !== null) {
+    return (
+      <section
+        className="report-success"
+        aria-labelledby="report-success-heading"
+      >
+        <h2
+          id="report-success-heading"
+          ref={successHeadingRef}
+          tabIndex={-1}
+          className="rounded-ui text-3xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
+        >
+          Reporte publicado
+        </h2>
+        <p className="mt-3 text-muted">
+          La foto y los datos del hallazgo ya están disponibles en el reporte.
+        </p>
+        <div className="report-success-summary">
+          <p className="text-sm text-muted">Lugar del hallazgo</p>
+          <p className="mt-2 font-semibold">{location}</p>
+        </div>
+        <div className="report-success-actions">
+          <Link
+            className="button-primary"
+            href={`/reportes/${encodeURIComponent(reportId)}`}
+          >
+            Ver reporte
+          </Link>
+          <button
+            type="button"
+            className="button-secondary"
+            onClick={onNewReport}
+          >
+            Crear otro reporte
+          </button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <form
@@ -67,6 +130,7 @@ export default function ReportFoundDogForm() {
           </label>
           <div className="grid grid-cols-1 gap-x-2 sm:grid-cols-[minmax(0,1fr)_auto]">
             <input
+              autoFocus={focusFirstField}
               id="report-location"
               name="location"
               data-report-field="location"
@@ -296,17 +360,6 @@ export default function ReportFoundDogForm() {
       </button>
       <p role="status" className="form-feedback">
         {isSubmitting ? "Publicando el reporte…" : null}
-        {reportId !== null ? (
-          <>
-            Reporte publicado.{" "}
-            <Link
-              className="text-action"
-              href={`/reportes/${encodeURIComponent(reportId)}`}
-            >
-              Ver reporte
-            </Link>
-          </>
-        ) : null}
       </p>
     </form>
   );
