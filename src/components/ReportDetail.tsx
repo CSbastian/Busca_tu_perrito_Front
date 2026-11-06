@@ -9,6 +9,7 @@ import { getReport } from "@/services/reports.api";
 import type { ReportResponse } from "@/services/reports.api";
 
 export default function ReportDetail({ id }: { id: string }) {
+  const [attempt, setAttempt] = useState(0);
   const [report, setReport] = useState<ReportResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [imageUnavailable, setImageUnavailable] = useState(false);
@@ -30,16 +31,29 @@ export default function ReportDetail({ id }: { id: string }) {
       });
 
     return () => controller.abort();
-  }, [id]);
+  }, [id, attempt]);
 
   if (error) {
     return (
-      <p
-        role="alert"
-        className="rounded-ui border border-line bg-surface p-5 text-red-700"
+      <section
+        className="report-detail-state"
+        aria-label="Error al cargar el reporte"
       >
-        {error}
-      </p>
+        <h2 className="text-2xl">No pudimos mostrar el reporte</h2>
+        <p role="alert" className="mt-3 text-red-700">
+          {error}
+        </p>
+        <button
+          type="button"
+          className="button-secondary mt-5"
+          onClick={() => {
+            setError(null);
+            setAttempt((value) => value + 1);
+          }}
+        >
+          Volver a cargar el reporte
+        </button>
+      </section>
     );
   }
   if (!report) {

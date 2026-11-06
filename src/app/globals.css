@@ -347,3 +347,9 @@ html {
     animation-duration: 0.01ms !important;
   }
 }
+
+.report-detail-state {
+  margin-top: 32px;
+  padding-block: 24px;
+  border-block: 1px solid var(--color-line);
+}
